@@ -1,0 +1,15 @@
+{
+  "name": "dashboardararamaker",
+  "version": "1.0.0",
+  "description": "Um Dashboard feito para o grupo AraramakerSpace, feito para o controle de alocacoes de salas e equipamentos",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "EJEC Minions",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^4.3.1",
+    "express": "^4.16.4"
+  }
+}
