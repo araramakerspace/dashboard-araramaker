@@ -29,7 +29,6 @@ router.get('/sitemap',function(req,res){
 });
 
 //Adds static paths to the folders the files will reference
-app.use('/static', express.static('static'))
 app.use('/img', express.static('img'))
 app.use('/css', express.static('css'))
 app.use('/js', express.static('js'))
