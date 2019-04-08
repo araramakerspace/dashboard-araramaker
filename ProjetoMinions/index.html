@@ -1,12 +1,55 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-	<title>Arara Makerspace</title>
+	<title>ARARA Makerspace</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/css/mainStyle.css">
 </head>
 <body>
 
+	<nav class="navbar navbar-expand-sm bg-light navbar-dark">
+	  <a class="navbar-brand" href="#"><img id="navbar-logo" src="/img/logo.png" alt="ARARA Makerspace"></a>
+	  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+	    <span class="navbar-toggler-icon"></span>
+	  </button>
+	  <div class="collapse navbar-collapse" id="collapsibleNavbar">
+	    <ul class="navbar-nav">
+	      <li class="nav-item">
+	        <a class="nav-link" href="#">Home</a>
+	      </li>
+	      <li class="nav-item">
+	        <a class="nav-link" href="#">About</a>
+	      </li>
+	      <li class="nav-item">
+	        <a class="nav-link" href="#">OLHA QUE LINK MASSA</a>
+	      </li>    
+	    </ul>
+	  </div>  
+	</nav>
 
+
+
+	<script src="/js/jquery.js"></script>
+	<script src="/js/bootstrap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+	<script type="text/javascript">
+		(function(){
+			var gId = function(id){
+				return document.getElementById(id);
+			}
+
+			//connect to socket.io
+			var socket = io.connect('http://localhost:8000');
+
+			//check for connection
+			if(socket !== undefined){
+				console.log('Connected to socket...');
+
+			}
+		})();
+		
+	</script>
 </body>
 </html>

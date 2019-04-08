@@ -10,22 +10,42 @@ Objectives:
 
 */
 
+
+// MODULES AND DEPENDENCIES
 const express = require('express')
 const app = express();
+var server = require('http').createServer(app);
+var io = require('socket.io').listen(server);
 const path = require('path');
 const router = express.Router();
 
+
+// VARIABLES
+var connections = [];
+
+// FUNCTIONS AND EVENTS
+
+server.listen(process.env.PORT || 8000);
+
+io.on('connection', function(socket){
+	
+	connections.push(socket); //add socket to active connections
+	console.log('Connected: %s sockets connected', connections.length);
+
+	//treating disconnection
+	socket.on('disconnect', function(data){
+		connections.splice(connections.indexOf(socket), 1);
+
+		console.log('Disconnected: %s sockets connected', connections.length);
+	});
+});
+
+
+
+// ROUTER
+
 router.get('/',function(req,res){
   res.sendFile(path.join(__dirname+'/index.html'));
-  //__dirname : It will resolve to your project folder.
-});
-
-router.get('/about',function(req,res){
-  res.sendFile(path.join(__dirname+'/about.html'));
-});
-
-router.get('/sitemap',function(req,res){
-  res.sendFile(path.join(__dirname+'/sitemap.html'));
 });
 
 //Adds static paths to the folders the files will reference
@@ -35,6 +55,7 @@ app.use('/js', express.static('js'))
 
 //add the router
 app.use('/', router);
-app.listen(process.env.port || 8000);
+
+// SERVER MESSAGES
 
 console.log('Server running at Port 8000');

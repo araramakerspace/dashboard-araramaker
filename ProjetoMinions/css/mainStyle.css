@@ -1,0 +1,16 @@
+#navbar-logo{
+	width: 80px;
+}
+
+.navbar{
+	background-color: #2973de !important;
+}
+
+.nav-link{
+	color: white !important;
+}
+
+.nav-link:hover{
+	color: #4bdeff !important;
+}
+
