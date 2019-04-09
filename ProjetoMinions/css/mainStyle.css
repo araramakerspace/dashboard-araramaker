@@ -1,5 +1,7 @@
+/* NAVBAR */
+
 #navbar-logo{
-	width: 80px;
+	width: 70px;
 }
 
 .navbar{
@@ -14,3 +16,33 @@
 	color: #4bdeff !important;
 }
 
+/* GERAL */
+.title{
+	text-align: center;
+	color: #0a2242;
+}
+
+/* CADASTRO */
+.cadastro
+{
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+
+.cadastro .row
+{
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.login-form
+{
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+
+.login-form .row
+{
+    margin-left: 0;
+    margin-right: 0;
+}
