@@ -10,16 +10,17 @@ var validaCadastro = function(socket) {
 	// Pega os formularios que queremos poder validar
 	var forms = document.getElementsByClassName('needs-validation');
 
-	let usuario = gId('usuario');
-	let email = gId('email');
-	let emailValid = true;
-	let senha = gId('senha');
-	let senhaConfirma = gId('senhaConfirma');
-	let submit = gId('registrar');
-
-
 	// Itera sobre eles evitando que sejam enviados
 	var validation = Array.prototype.filter.call(forms, function(form) {
+
+		let usuario = gId('usuario');
+		let email = gId('email');
+		let cpf = gId('cpf');
+		let cpfValid = true;
+		let senha = gId('senha');
+		let senhaConfirma = gId('senhaConfirma');
+		let submit = gId('registrar');
+
 		form.addEventListener('submit', function(event) {
 			submit.disabled = true;
 
@@ -29,7 +30,7 @@ var validaCadastro = function(socket) {
 
 			**************************************************/
 
-			socket.emit('signinValidation', {user: usuario.value, email: email.value});
+			socket.emit('signinValidation', {user: usuario.value, cpf: cpf.value});
 
 			socket.on('signinResponse', function(response){
 				if(!response.user)
@@ -37,7 +38,7 @@ var validaCadastro = function(socket) {
 				else
 					usuario.setCustomValidity('');
 
-				emailValid = response.email;
+				cpfValid = response.cpf;
 
 				submit.disabled = false;
 			})
@@ -50,10 +51,15 @@ var validaCadastro = function(socket) {
 				validaEmail = validaEmail.concat(last);
 			}
 
-			if(!emailValid)
+			if(validaEmail.length < 3)
 				email.setCustomValidity('E-mail inválido');
 			else
 				email.setCustomValidity('');
+
+			if(!TestaCPF(cpf.value) || !cpfValid)
+				cpf.setCustomValidity('CPF inválido');
+			else
+				cpf.setCustomValidity('');
 
 			if(gId('senha').value != senhaConfirma.value)
 				senhaConfirma.setCustomValidity('As senhas devem ser iguais!');
@@ -74,6 +80,11 @@ function TestaCPF(strCPF) {
 	let Soma = 0;
     let Resto;
 	if (strCPF == "00000000000") return false;
+
+	for(let i = 0; i < strCPF.length; i++){
+		if(isNaN(parseInt(strCPF[i])))
+			return false;
+	}
      
   	for (i=1; i<=9; i++)
   		Soma += parseInt(strCPF.substring(i-1, i)) * (11 - i);
@@ -83,12 +94,12 @@ function TestaCPF(strCPF) {
     	Resto = 0;
 
     if (Resto != parseInt(strCPF.substring(9, 10)) ) return false;
-   
+
 	Soma = 0;
     for (i = 1; i <= 10; i++)
     	Soma += parseInt(strCPF.substring(i-1, i)) * (12 - i);
     Resto = (Soma * 10) % 11;
-   
+
     if ((Resto == 10) || (Resto == 11))
     	Resto = 0;
     if (Resto != parseInt(strCPF.substring(10, 11) ) ) return false;

@@ -56,7 +56,7 @@ router.get('/cadastro',function(req,res){
 router.post('/signin',function(req,res){
 	console.log('cadastrando');
 
-	res.sendFile(path.join(__dirname+'/index.html'));
+	res.redirect('/');
 });
 
 //Adds static paths to the folders the files will reference
