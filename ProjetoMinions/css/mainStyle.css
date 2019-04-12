@@ -16,6 +16,45 @@
 	color: #4bdeff !important;
 }
 
+.details{
+	font-size: 13px;
+	width: 100%;
+	text-align: center;
+}
+
+#loginDropdown{
+	width: 250px !important;
+	border-radius: 10px;
+	background-color: #bdd4f5;
+}
+
+#loginDropdown:hover{
+	background-color: #e9f1fc;
+}
+
+#loginDropdown a{
+	color: #1c5ab0 !important;
+}
+
+#formLogin ul{
+	width: 100% !important;
+	padding: 5px;
+}
+
+#formLogin ul li{
+	margin-bottom: 2px;
+}
+
+#formLogin ul li button{
+	width: 100% !important;
+	background-color: #07162c;
+	color: white;
+}
+
+#formLogin ul li button:hover{
+	background-color: #11386e;
+}
+
 /* GERAL */
 .title{
 	text-align: center;
