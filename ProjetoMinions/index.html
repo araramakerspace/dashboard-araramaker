@@ -11,20 +11,48 @@
 <body>
 
 	<nav class="navbar navbar-expand-sm bg-light navbar-dark">
-	  <a class="navbar-brand" href="#"><img id="navbar-logo" src="/img/logo.png" alt="ARARA Makerspace"></a>
-	  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-	    <span class="navbar-toggler-icon"></span>
-	  </button>
-	  <div class="collapse navbar-collapse" id="collapsibleNavbar">
-	    <ul class="navbar-nav">
-	      <li class="nav-item">
-	        <a class="nav-link" href="/">Início</a>
-	      </li>
-	      <li class="nav-item">
-	        <a class="nav-link" href="#">Sobre</a>
-	      </li>
-	    </ul>
-	  </div>  
+	  	<a class="navbar-brand" href="#"><img id="navbar-logo" src="/img/logo.png" alt="ARARA Makerspace"></a>
+	  	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+	    	<span class="navbar-toggler-icon"></span>
+	  	</button>
+	  	<div class="collapse navbar-collapse justify-content-between" id="collapsibleNavbar">
+	    	<ul class="navbar-nav">
+		     	<li class="nav-item">
+		        	<a class="nav-link" href="/">Início</a>
+		      	</li>
+		      	<li class="nav-item">
+		        	<a class="nav-link" href="#">Sobre</a>
+		      	</li>
+	    	</ul>
+	      	<ul class="navbar-nav navbar-right">
+	      		<li class="dropdown nav-item" id="loginDropdown">
+	      			<a class="nav-link" data-toggle="dropdown" href="#">Entrar</a>
+	      			<form id="formLogin" action="#" method="">
+	      				<ul class="dropdown-menu">
+	      					<li class="input-group">
+								<input type="text" class="form-control mr-sm-2" placeholder="Usuário" aria-label="Username" aria-describedby="user">
+							</li>
+
+							<li class="input-group">
+								<input type="password" class="form-control mr-sm-2" placeholder="Senha" aria-label="Username" aria-describedby="password">
+							</li>
+							<li>
+								<button class="btn my-2 my-sm-0" type="submit">Entrar</button>
+							</li>
+							<li class="input-group">
+								<span class="details"><a href="/redefinirSenha">Esqueci minha senha.</a></span>
+							</li>
+							<li class="dropdown-divider"></li>
+							<li class="input-group">
+								<span class="details">Não possui uma conta? <a href="/cadastro">Cadastre-se.</a></span>
+							</li>
+	      				</ul>
+	      			</form>
+	      		</li>
+	      	</ul>
+
+	      	
+	  	</div>  
 	</nav>
 
 
@@ -32,18 +60,8 @@
 	<script src="/js/jquery.js"></script>
 	<script src="/js/bootstrap.min.js"></script>
 	<script src="/js/main.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
 	<script type="text/javascript">
-		(function(){
-			//connect to socket.io
-			var socket = io.connect(port);
-
-			//check for connection
-			if(socket !== undefined){
-				console.log('Connected to socket...');
-
-			}
-		})();
+		
 		
 	</script>
 </body>
