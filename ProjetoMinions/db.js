@@ -13,6 +13,8 @@ Objectives:
 //Path to the database
 const dbPath = 'araradatabase.db';
 
-const conn = require('./models/Conn.js');
-const Db = new conn(dbPath);
+const Conn = require('./models/Conn.js');
+const db = new Conn(dbPath);
+
+module.exports = db;
 
