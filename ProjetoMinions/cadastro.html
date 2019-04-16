@@ -27,17 +27,23 @@
 	      	<ul class="navbar-nav navbar-right">
 	      		<li class="dropdown nav-item" id="loginDropdown">
 	      			<a class="nav-link" data-toggle="dropdown" href="#">Entrar</a>
-	      			<form id="formLogin" action="#" method="">
+	      			<form name="formLogin" id="formLogin" action="/login" method="POST" class="needs-validation">
 	      				<ul class="dropdown-menu">
 	      					<li class="input-group">
-								<input type="text" class="form-control mr-sm-2" placeholder="Usuário" aria-label="Username" aria-describedby="user">
+	      						<div class="form-group">
+									<input type="text" class="form-control mr-sm-2" id="loginUser" placeholder="Usuário" aria-label="Username" required>
+									<div class="invalid-feedback">Usuário desconhecido.</div>
+	      						</div>
 							</li>
 
 							<li class="input-group">
-								<input type="password" class="form-control mr-sm-2" placeholder="Senha" aria-label="Username" aria-describedby="password">
+								<div class="form-group">
+									<input type="password" class="form-control mr-sm-2" id="loginPassword" placeholder="Senha" aria-label="Username" required>
+									<div class="invalid-feedback">Senha incorreta.</div>
+								</div>
 							</li>
 							<li>
-								<button class="btn my-2 my-sm-0" type="submit">Entrar</button>
+								<button id="loginBtn" class="btn my-2 my-sm-0" type="submit">Entrar</button>
 							</li>
 							<li class="input-group">
 								<span class="details"><a href="/redefinirSenha">Esqueci minha senha.</a></span>
@@ -62,7 +68,7 @@
 	                    <div class="card">
 	                        <div class="card-header"><h2 class="title">Cadastre-se</h1></div>
 	                        <div class="card-body">
-	                            <form name="cadastro" action="/signin" method="post" class="needs-validation">
+	                            <form name="cadastro" id="cadastro" action="/signin" method="post" class="needs-validation">
 	                                <div class="form-group row">
 	                                    <label for="usuario" class="col-md-4 col-form-label text-md-right">Usuário</label>
 	                                    <div class="col-md-6">
@@ -120,18 +126,10 @@
 
 	<script src="/js/jquery.js"></script>
 	<script src="/js/bootstrap.min.js"></script>
-	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<script src="/js/axios.min.js"></script>
 	<script src="/js/main.js"></script>
 	<script src="/js/cadastro.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
 	<script type="text/javascript">
-		(function(){
-			'use strict';
-
-  			window.addEventListener('load', validaCadastro(), false);
-
-			
-		})();
 		
 	</script>
 </body>

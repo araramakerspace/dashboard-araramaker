@@ -33,20 +33,38 @@ router.post('/signin', function(req,res){
 
 	//add the values to of the request to the database
 
-	res.send('');
+	res.send('Cadastrando');
 	//res.redirect('/');
+});
+
+//This routes logs the user in
+router.post('/login', (req, res) => {
+
+	//makes the user log in.
+
+	res.send('Efetuando login');
 });
 
 // SERVICES
 
-//Esta função avalia se já existe usuário ou cpf cadastrado no banco de dados, e retorna true para cada registro encontrado
+//This function checks if there's already a user or cpf registered on the database, and returns true for each registry found
 router.post('/validaCadastro', (req, res) => {
 	let data = {user: false, cpf: false};
 	
 	//search the database for entries for each parameter. Return true for each of existing entries
-	console.log('Validacao', req.body);
+	console.log('Validacao', req.body, data);
 
 	res.send(JSON.stringify(data));
 });
+
+//This functions checks if the user os the password is valid. It returns true for each valid field
+router.post('/checkLogin', (req, res) => {
+	let data = {user: true, password: true}
+
+	console.log('Entrando', res.body, data);
+
+	res.send(JSON.stringify(data));
+});
+
 
 module.exports = router;

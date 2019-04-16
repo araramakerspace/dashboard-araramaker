@@ -1,87 +1,85 @@
+/*
+	Main functionalities file
+
+	Author: Raul Rosá
+	Created on: Friday, 12/04/2019
+
+	Objetives:
+		Contains the functions used by the page "Cadastro", which involves:
+		* Validating the sign in functions
+		* A function that checks if a CPF is valid
+
+*/
+
+
 // CADASTRO
 
-var validaCadastro = function() {
-	// Pega os formularios que queremos poder validar
-	var forms = document.getElementsByClassName('needs-validation');
+gId('registrar').addEventListener('click', async function(event){
+	let usuario = gId('usuario');
+	let email = gId('email');
+	let cpf = gId('cpf');
+	let cpfValid = true;
+	let senha = gId('senha');
+	let senhaConfirma = gId('senhaConfirma');
+	let form = gId('cadastro');
 
-	// Itera sobre eles evitando que sejam enviados
-	var validation = Array.prototype.filter.call(forms, function(form) {
+    event.stopPropagation();
+    event.preventDefault();
 
-		let usuario = gId('usuario');
-		let email = gId('email');
-		let cpf = gId('cpf');
-		let cpfValid = true;
-		let senha = gId('senha');
-		let senhaConfirma = gId('senhaConfirma');
-		let submit = gId('registrar');
+	this.disabled = true;
 
-		form.addEventListener('submit', async function(event) {
-	      	event.preventDefault();
+	/**************************************************
 
-			submit.disabled = true;
+	Adiciona métodos de validação personalizados
 
-			/**************************************************
+	**************************************************/
+	const data = {user: usuario.value, cpf: cpf.value};
+	
+	//Envia uma requisição para checar se o usuario ou o cpf ja estão cadastrados
+	await axios.post('/validaCadastro', data)
+	.then(res => {
+		if(res.data.user)
+			usuario.setCustomValidity('Usuário inválido');
+		else
+			usuario.setCustomValidity('');
 
-			Adiciona métodos de validação personalizados
+		cpfValid = !res.data.cpf;
+	})
+	.catch(err => {
+		console.error(err);
+		return this.disabled = true;
+	})
 
-			**************************************************/
-			const data = {user: usuario.value, cpf: cpf.value};
-			
-			//Envia uma requisição para checar se o usuario ou o cpf ja estão cadastrados
-			await axios.post('/validaCadastro', {user: usuario.value, cpf: cpf.value})
-			.then(res => {
-				if(res.data.user)
-					usuario.setCustomValidity('Usuário inválido');
-				else
-					usuario.setCustomValidity('');
+	//email deve estar no formato xxx@xxx.xxx
+	let validaEmail = email.value.split('@');
+	if(validaEmail[1]){
+		let last = validaEmail[1].split('.');
+		validaEmail.pop();
+		validaEmail = validaEmail.concat(last);
+	}
 
+	if(validaEmail.length < 3)
+		email.setCustomValidity('E-mail inválido');
+	else
+		email.setCustomValidity('');
 
-				if(res.data.cpf)
-					cpf.setCustomValidity('CPF inválido');
-				else
-					cpf.setCustomValidity('');
-			})
-			.catch(err => {
-				console.error(err);
-				return submit.disabled = true;
-			})
+	if(!TestaCPF(cpf.value) || !cpfValid)
+		cpf.setCustomValidity('CPF inválido');
+	else
+		cpf.setCustomValidity('');
 
-
-			//email deve estar no formato xxx@xxx.xxx
-			let validaEmail = email.value.split('@');
-			if(validaEmail[1]){
-				let last = validaEmail[1].split('.');
-				validaEmail.pop();
-				validaEmail = validaEmail.concat(last);
-			}
-
-			if(validaEmail.length < 3)
-				email.setCustomValidity('E-mail inválido');
-			else
-				email.setCustomValidity('');
-
-			if(!TestaCPF(cpf.value) || !cpfValid)
-				cpf.setCustomValidity('CPF inválido');
-			else
-				cpf.setCustomValidity('');
-
-			if(gId('senha').value != senhaConfirma.value)
-				senhaConfirma.setCustomValidity('As senhas devem ser iguais!');
-			else
-				senhaConfirma.setCustomValidity('');
+	if(gId('senha').value != senhaConfirma.value)
+		senhaConfirma.setCustomValidity('As senhas devem ser iguais!');
+	else
+		senhaConfirma.setCustomValidity('');
 
 
-		    form.classList.add('was-validated');
-		    submit.disabled = false;
-	    	if (form.checkValidity() === false) {
-	      		event.stopPropagation();
-	    	}
-	    	else{
-		    	this.submit();
-	    	}
-		}, false);
-	});
-}
+    form.classList.add('was-validated');
+    this.disabled = false;
+	if (form.checkValidity() === true) {
+    	form.submit();
+	}
+});
 
 function TestaCPF(strCPF) {
 	let Soma = 0;

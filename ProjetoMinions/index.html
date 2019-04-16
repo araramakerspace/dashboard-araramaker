@@ -27,17 +27,23 @@
 	      	<ul class="navbar-nav navbar-right">
 	      		<li class="dropdown nav-item" id="loginDropdown">
 	      			<a class="nav-link" data-toggle="dropdown" href="#">Entrar</a>
-	      			<form id="formLogin" action="#" method="">
+	      			<form name="formLogin" id="formLogin" action="/login" method="POST" class="needs-validation">
 	      				<ul class="dropdown-menu">
 	      					<li class="input-group">
-								<input type="text" class="form-control mr-sm-2" placeholder="Usuário" aria-label="Username" aria-describedby="user">
+	      						<div class="form-group">
+									<input type="text" class="form-control mr-sm-2" id="loginUser" placeholder="Usuário" aria-label="Username" required>
+									<div class="invalid-feedback">Usuário desconhecido.</div>
+	      						</div>
 							</li>
 
 							<li class="input-group">
-								<input type="password" class="form-control mr-sm-2" placeholder="Senha" aria-label="Username" aria-describedby="password">
+								<div class="form-group">
+									<input type="password" class="form-control mr-sm-2" id="loginPassword" placeholder="Senha" aria-label="Username" required>
+									<div class="invalid-feedback">Senha incorreta.</div>
+								</div>
 							</li>
 							<li>
-								<button class="btn my-2 my-sm-0" type="submit">Entrar</button>
+								<button id="loginBtn" class="btn my-2 my-sm-0" type="submit">Entrar</button>
 							</li>
 							<li class="input-group">
 								<span class="details"><a href="/redefinirSenha">Esqueci minha senha.</a></span>
@@ -59,9 +65,9 @@
 
 	<script src="/js/jquery.js"></script>
 	<script src="/js/bootstrap.min.js"></script>
+	<script src="/js/axios.min.js"></script>
 	<script src="/js/main.js"></script>
 	<script type="text/javascript">
-		
 		
 	</script>
 </body>

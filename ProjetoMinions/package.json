@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.18.0",
+    "bluebird": "^3.5.4",
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "jshint": "^2.10.2",
