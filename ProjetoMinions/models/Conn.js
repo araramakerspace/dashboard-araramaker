@@ -38,6 +38,21 @@ class Conn {
 		});
 	}
 
+	exec(sql){
+		return new Promise((resolve, reject) => {
+			this.db.exec(sql, function(err){
+				if(err){
+					console.log('Error running sql ' + sql)
+			        console.log(err)
+			        reject(err)
+				}
+				else{
+					resolve({id: this.lastID});
+				}
+			})
+		});
+	}
+
 	get(sql, params = []) {
 	    return new Promise((resolve, reject) => {
 	    	this.db.get(sql, params, (err, result) => {

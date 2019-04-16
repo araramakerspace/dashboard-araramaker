@@ -1,0 +1,21 @@
+CREATE TABLE IF NOT EXISTS user(
+	id_user INTEGER PRIMARY KEY AUTOINCREMENT,
+	name VARCHAR,
+	email VARCHAR,
+	cpf VARCHAR,
+	permission INT,
+	password VARCHAR
+);
+
+CREATE TABLE IF NOT EXISTS equipment(
+	id_equipment INTEGER PRIMARY KEY AUTOINCREMENT,
+	name VARCHAR,
+	description TEXT,
+	qtd INT
+);
+
+CREATE TABLE IF NOT EXISTS schedule(
+	id_schedule INTEGER PRIMARY KEY AUTOINCREMENT,
+	date DATE,
+	startHour INT
+);

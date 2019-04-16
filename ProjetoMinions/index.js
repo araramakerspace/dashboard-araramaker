@@ -15,7 +15,6 @@ const express = require('express')
 const app = express();
 const router = require('./router');
 const bodyParser = require('body-parser');
-const sql = require('./db.js');
 
 const port = process.env.PORT || 8000
 
