@@ -12,6 +12,7 @@ Objectives:
 
 // MODULES AND DEPENDENCIES
 const express = require('express')
+const path = require('path');
 const app = express();
 const router = require('./router');
 const bodyParser = require('body-parser');
@@ -29,5 +30,10 @@ app.use('/js', express.static('js'))
 
 //add the router
 app.use('/', router);
+
+app.use(function(req, res, next) {
+  return res.status(404).sendFile(path.join(__dirname+'/error.html'));
+  //res.redirect('/error');
+});
 
 app.listen(port, () => console.log(`Server running at Port ${port}`));

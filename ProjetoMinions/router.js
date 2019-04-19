@@ -26,6 +26,9 @@ router.get('/cadastro',function(req,res){
 router.get('/redefinirSenha', function(req, res){
 	res.status(404).send('Page not Found');
 });
+router.get('/error', function(req, res){
+	//res.status(404).
+});
 
 // DATA POSTS
 
