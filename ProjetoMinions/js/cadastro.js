@@ -18,7 +18,7 @@ gId('registrar').addEventListener('click', async function(event){
 	let usuario = gId('usuario');
 	let email = gId('email');
 	let cpf = gId('cpf');
-	let cpfValid = true;
+	let cpfValid = false;
 	let senha = gId('senha');
 	let senhaConfirma = gId('senhaConfirma');
 	let form = gId('cadastro');
@@ -44,41 +44,41 @@ gId('registrar').addEventListener('click', async function(event){
 			usuario.setCustomValidity('');
 
 		cpfValid = !res.data.cpf;
+		
+		//email deve estar no formato xxx@xxx.xxx
+		let validaEmail = email.value.split('@');
+		if(validaEmail[1]){
+			let last = validaEmail[1].split('.');
+			validaEmail.pop();
+			validaEmail = validaEmail.concat(last);
+		}
+
+		if(validaEmail.length < 3)
+			email.setCustomValidity('E-mail inválido');
+		else
+			email.setCustomValidity('');
+
+		if(!TestaCPF(cpf.value) || !cpfValid)
+			cpf.setCustomValidity('CPF inválido');
+		else
+			cpf.setCustomValidity('');
+
+		if(gId('senha').value != senhaConfirma.value)
+			senhaConfirma.setCustomValidity('As senhas devem ser iguais!');
+		else
+			senhaConfirma.setCustomValidity('');
+
+
+	    form.classList.add('was-validated');
+	    this.disabled = false;
+		if (form.checkValidity() === true) {
+	    	form.submit();
+		}
 	})
 	.catch(err => {
 		console.error(err);
 		return this.disabled = true;
 	})
-
-	//email deve estar no formato xxx@xxx.xxx
-	let validaEmail = email.value.split('@');
-	if(validaEmail[1]){
-		let last = validaEmail[1].split('.');
-		validaEmail.pop();
-		validaEmail = validaEmail.concat(last);
-	}
-
-	if(validaEmail.length < 3)
-		email.setCustomValidity('E-mail inválido');
-	else
-		email.setCustomValidity('');
-
-	if(!TestaCPF(cpf.value) || !cpfValid)
-		cpf.setCustomValidity('CPF inválido');
-	else
-		cpf.setCustomValidity('');
-
-	if(gId('senha').value != senhaConfirma.value)
-		senhaConfirma.setCustomValidity('As senhas devem ser iguais!');
-	else
-		senhaConfirma.setCustomValidity('');
-
-
-    form.classList.add('was-validated');
-    this.disabled = false;
-	if (form.checkValidity() === true) {
-    	form.submit();
-	}
 });
 
 function TestaCPF(strCPF) {
