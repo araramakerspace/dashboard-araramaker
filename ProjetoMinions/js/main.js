@@ -33,12 +33,12 @@ gId('loginBtn').addEventListener('click', async function(event){
 	//Envia uma requisição para checar se o usuario ou a senha são validos
 	await axios.post('/checkLogin', data)
 	.then(res => {
-		if(!res.data.user)
+		if(!res.data)
 			usuario.setCustomValidity('Usuário inválido');
 		else
 			usuario.setCustomValidity('');
 
-		if(!res.data.password)
+		if(!res.data)
 			password.setCustomValidity('Senha inválida');
 		else
 			password.setCustomValidity('');

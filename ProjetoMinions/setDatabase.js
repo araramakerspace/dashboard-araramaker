@@ -22,10 +22,10 @@ fs.readFile('./database/dbScript.sql', 'utf8', function(err, contents){
 	fs.writeFile('./araradatabase.db', '', () => {
 		console.log('Previous database information erased.');
 	})
-	fs.readFile('./araradatabase.db', '', (err, contents) => {
+	/*fs.readFile('./araradatabase.db', '', (err, contents) => {
 		if(err) return console.log('Error reading database info');
 		console.log(contents);
-	})
+	})*/
 
 	sql.exec(contents);
 });
