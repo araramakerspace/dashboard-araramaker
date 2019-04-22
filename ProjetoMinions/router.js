@@ -23,6 +23,17 @@ router.get('/',function(req,res){
 router.get('/cadastro',function(req,res){
 	res.sendFile(path.join(__dirname+'/public/cadastro.html'));
 });
+router.get('/admin',function(req,res){
+	if(req.session.user){
+		if(req.session.user.permission == 1)
+			res.sendFile(path.join(__dirname+'/public/admin.html'));
+		else
+			res.redirect('/');
+	}
+	else
+		res.redirect('/');
+	
+});
 router.get('/redefinirSenha', function(req, res){
 	res.status(404).send('Page not Found');
 });
@@ -35,7 +46,7 @@ router.post('/signin', function(req,res){
 	);
 });
 
-//This routes logs the user in
+//This route logs the user in
 router.post('/login', (req, res) => {
 
 	if(req.session){
@@ -51,6 +62,17 @@ router.post('/login', (req, res) => {
 	else
 		res.redirect('/error');
 });
+
+//This route logs the user out
+router.get('/logout', (req, res) => {
+	if(req.session){
+		//delete session obj
+		req.session.destroy((err) => {
+			if(err) return next(err);
+			else return res.redirect('/');
+		});
+	}
+})
 
 // SERVICES
 
@@ -80,7 +102,7 @@ router.get('/session', (req, res) => {
 	if(req.session.user)
 		res.send(JSON.stringify(req.session.user));
 	else
-		req.status(404).send({error: true});
+		res.send(JSON.stringify({error: true}));
 })
 
 
