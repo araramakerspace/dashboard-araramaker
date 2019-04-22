@@ -18,10 +18,10 @@ const sql = require('./db.js');
 // PAGES
 
 router.get('/',function(req,res){
-	res.sendFile(path.join(__dirname+'/index.html'));
+	res.sendFile(path.join(__dirname+'/public/index.html'));
 });
 router.get('/cadastro',function(req,res){
-	res.sendFile(path.join(__dirname+'/cadastro.html'));
+	res.sendFile(path.join(__dirname+'/public/cadastro.html'));
 });
 router.get('/redefinirSenha', function(req, res){
 	res.status(404).send('Page not Found');

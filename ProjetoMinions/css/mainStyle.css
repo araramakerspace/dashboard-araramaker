@@ -101,8 +101,6 @@ section .section-title {
 }
 #footer {
     background: #2973de !important;
-    position: absolute;
-    bottom: 0;
     width: 100%;
   
 }
@@ -148,11 +146,6 @@ section .section-title {
 	transition: .2s all ease;
 }
 #footer ul.quick-links li:hover {
-	padding: 3px 0;
-	margin-left:5px;
-	font-weight:700;
-}
-#footer ul.quick-links2 li{
 	padding: 3px 0;
 	margin-left:5px;
 	font-weight:700;

@@ -35,7 +35,7 @@ app.use('/js', express.static('js'))
 app.use('/', router);
 
 app.use(function(req, res, next) {
-  return res.status(404).sendFile(path.join(__dirname+'/error.html'));
+  return res.status(404).sendFile(path.join(__dirname+'/public/error.html'));
 });
 
 app.listen(port, () => console.log(`Server running at Port ${port}`));
