@@ -36,22 +36,22 @@
 	color: #1c5ab0 !important;
 }
 
-#formLogin ul{
+#loginDropdown ul{
 	width: 100% !important;
 	padding: 5px;
 }
 
-#formLogin ul li{
+#loginDropdown ul li{
 	margin-bottom: 2px;
 }
 
-#formLogin ul li button{
+#loginDropdown ul li button{
 	width: 100% !important;
 	background-color: #07162c;
 	color: white;
 }
 
-#formLogin ul li button:hover{
+#loginDropdown ul li button:hover{
 	background-color: #11386e;
 }
 

@@ -15,6 +15,7 @@ Objectives:
 
 const sql = require('./db.js');
 const fs = require('fs');
+const crypto = require('crypto');
 
 fs.readFile('./database/dbScript.sql', 'utf8', function(err, contents){
 	if(err) return console.log('Error reading database file');
@@ -22,10 +23,26 @@ fs.readFile('./database/dbScript.sql', 'utf8', function(err, contents){
 	fs.writeFile('./araradatabase.db', '', () => {
 		console.log('Previous database information erased.');
 	})
-	/*fs.readFile('./araradatabase.db', '', (err, contents) => {
-		if(err) return console.log('Error reading database info');
-		console.log(contents);
-	})*/
 
 	sql.exec(contents);
+
+
+	let salt = crypto.randomBytes(16).toString('hex');
+
+	let admin = {
+		usuario: 'admin',
+		email: 'Araramaker@gmail.com',
+		cpf: '',
+		salt: salt,
+		hash: crypto.pbkdf2Sync('admin', salt, 10000, 512, 'sha512').toString('hex')
+	}
+
+	sql.run("INSERT INTO Users(name, email, cpf, hash, salt, permission) VALUES(?, ?, ?, ?, ?, ?)", [
+		admin.usuario.toLowerCase(),
+		admin.email.toLowerCase(),
+		admin.cpf,
+		admin.hash,
+		admin.salt,
+		1
+	]);
 });
