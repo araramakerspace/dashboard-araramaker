@@ -8,11 +8,11 @@
 	background-color: #2973de !important;
 }
 
-.nav-link{
+#navUl .nav-link{
 	color: white !important;
 }
 
-.nav-link:hover{
+#navUl .nav-link:hover{
 	color: #4bdeff !important;
 }
 
@@ -61,39 +61,13 @@
 	color: #0a2242;
 }
 
-/* CADASTRO */
-.cadastro
-{
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
-}
-
-.cadastro .row
-{
-    margin-left: 0;
-    margin-right: 0;
-}
-
-.login-form
-{
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
-}
-
-.login-form .row
-{
-    margin-left: 0;
-    margin-right: 0;
-}
-
-
 
 /* Footer */
-section {
+footer {
     padding: 30px 0;
 }
 
-section .section-title {
+footer .section-title {
     text-align: center;
     color: #2973de;
     margin-bottom: 50px;
@@ -162,9 +136,6 @@ section .section-title {
 #footer ul.quick-links li a i {
     font-weight: 700;
 }
-
-
-
 
 @media (max-width:770px){
 	#footer h5 {

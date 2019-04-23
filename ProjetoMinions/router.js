@@ -13,7 +13,7 @@ Objectives:
 const express = require('express');
 const path = require('path');
 const router = express.Router();
-const sql = require('./db.js');
+const sql = require('./db');
 
 // PAGES
 
@@ -52,9 +52,8 @@ router.post('/login', (req, res) => {
 	if(req.session){
 		sql.getUserById(req.session.idUser)
 		.then((result) => {
-			if(result.err) {
+			if(result.err)
 				res.redirect("/error");
-			}
 			req.session.user = result.user;
 			res.redirect("/");
 		});
@@ -78,7 +77,6 @@ router.get('/logout', (req, res) => {
 
 //This function checks if there's already a user or cpf registered on the database, and returns true for each registry found
 router.post('/validaCadastro', (req, res) => {
-
 	//search the database for entries for these parameters. Returns true for each of existing entries
 	sql.validateSignin(req.body.user, req.body.cpf)
 	.then((data) => {
@@ -86,7 +84,7 @@ router.post('/validaCadastro', (req, res) => {
 	})
 });
 
-//This functions checks if the user os the password is valid. It returns true for each valid field
+//This functions checks if the user or the password is valid. It returns true for each valid field
 router.post('/checkLogin', (req, res) => {
 	sql.validateLogin(req.body.user, req.body.password)
 	.then((data) => {
@@ -105,5 +103,14 @@ router.get('/session', (req, res) => {
 		res.send(JSON.stringify({error: true}));
 })
 
+router.get('/schedules', (req, res) => {
+	sql.getSchedules()
+	.then((data) => {
+		if(data.error)
+			res.status(500).send("Couldn't get database information.");
+		else
+			res.send(JSON.stringify(data));
+	});
+})
 
 module.exports = router;

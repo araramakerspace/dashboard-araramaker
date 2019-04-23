@@ -25,7 +25,7 @@ window.addEventListener('load', async function(){
 		if(!res.data.error){
 			let user = res.data;
 			user.admin = (user.permission == 1);
-			alterNavbar(user.name, user.id_user);
+			alterNavbar(user.name, user.id_user, user.permission);
 		}
 	});
 });
@@ -86,7 +86,8 @@ if(loginBtn){
 
 *******************/
 
-const alterNavbar = function(user, userId){
+const alterNavbar = function(user, userId, permission){
+	//Makes the logout button on the user dropdown
 	let loginDropdown = gId("loginDropdown");
 	let formLogin = gId("formLogin");
 	if(formLogin)
@@ -97,7 +98,17 @@ const alterNavbar = function(user, userId){
 	let userName = document.createTextNode(user);
 
 	loginDropdown.children[0].appendChild(userName);
+	addLogoutDropdown(loginDropdown);
 
+
+	//adds a new Admin tab for easy access
+	let navUl = gId('navUl');
+	if(navUl)
+		addAdminBar(navUl);
+
+}
+
+const addLogoutDropdown = function(loginDropdown){
 	let newDropdown = document.createElement('ul');
 	newDropdown.className += 'dropdown-menu';
 
@@ -112,4 +123,18 @@ const alterNavbar = function(user, userId){
 			newLi.appendChild(logoutLink);
 		newDropdown.appendChild(newLi);
 	loginDropdown.appendChild(newDropdown);
+}
+
+const addAdminBar = function(navUl){
+	let newLi = document.createElement('li');
+	newLi.className += 'nav-item';
+
+		let adminLink = document.createElement('a');
+		adminLink.className += 'nav-link';
+		adminLink.href = "/admin";
+		adminLink.appendChild(document.createTextNode('Admin'));
+
+		newLi.appendChild(adminLink);
+
+	navUl.appendChild(newLi);
 }

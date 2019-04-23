@@ -45,4 +45,14 @@ fs.readFile('./database/dbScript.sql', 'utf8', function(err, contents){
 		admin.salt,
 		1
 	]);
+
+	sql.run("INSERT INTO Schedules(weekDay, start_time, end_time, open) VALUES "+
+		"('monday', 8, 12, 0), ('monday', 13, 18, 0), ('monday', 19, 22, 0), "+
+		"('tuesday', 8, 12, 0), ('tuesday', 13, 18, 0), ('tuesday', 19, 22, 0), "+
+		"('wednesday', 8, 12, 0), ('wednesday', 13, 18, 0), ('wednesday', 19, 22, 0), "+
+		"('thursday', 8, 12, 0), ('thursday', 13, 18, 0), ('thursday', 19, 22, 0), "+
+		"('friday', 8, 12, 0), ('friday', 13, 18, 0), ('friday', 19, 22, 0), "+
+		"('saturday', 8, 12, 0), ('saturday', 13, 18, 0), ('saturday', 19, 22, 0), "+
+		"('sunday', 8, 12, 0), ('sunday', 13, 18, 0), ('sunday', 19, 22, 0)"
+	);
 });

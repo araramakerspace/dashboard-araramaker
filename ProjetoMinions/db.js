@@ -26,14 +26,28 @@ db.getUserById = async function(id){
 
 	await this.get("SELECT id_user, name, email, cpf, permission FROM Users WHERE id_user = ?", [id])
 	.then((result) => {
-		if(result !== undefined){
+		if(result !== undefined)
 			user = result;
-		}
 		else
 			error = "Error getting user by id";
 	})
 
 	return {error, user};
+}
+
+db.getSchedules = async function(){
+	let schedules = {};
+	let error = null;
+
+	await this.all("SELECT weekDay, start_time, end_time, open FROM Schedules")
+	.then((result) => {
+		if(result !== undefined)
+			schedules = result;
+		else
+			error = "Error getting schedules";
+	});
+
+	return {schedules, error};
 }
 
 //VALIDATE
