@@ -20,56 +20,60 @@ const getSchedules = async function(){
 	await axios.get('/schedules')
 	.then(res => {
 		if(!res.data.error){
-			let startTime = 24, endTime = 1;
-			let schedules = res.data.schedules;
-			let weekDays = [ [], [], [], [], [], [], [] ];
-
-			schedules.forEach((schedule) => {
-				if(schedule.start_time < startTime)
-					startTime = schedule.start_time;
-				if(schedule.end_time > endTime)
-					endTime = schedule.end_time;
-
-				switch(schedule.weekDay.toLowerCase()){
-					case 'monday':
-						for(let i = schedule.start_time; i < schedule.end_time; i++)
-							weekDays[1].push({time: i, open: schedule.open});
-						break;
-					case 'tuesday':
-						for(let i = schedule.start_time; i < schedule.end_time; i++)
-							weekDays[2].push({time: i, open: schedule.open});
-						break;
-					case 'wednesday':
-						for(let i = schedule.start_time; i < schedule.end_time; i++)
-							weekDays[3].push({time: i, open: schedule.open});
-						break;
-					case 'thursday':
-						for(let i = schedule.start_time; i < schedule.end_time; i++)
-							weekDays[4].push({time: i, open: schedule.open});
-						break;
-					case 'friday':
-						for(let i = schedule.start_time; i < schedule.end_time; i++)
-							weekDays[5].push({time: i, open: schedule.open});
-						break;
-					case 'saturday':
-						for(let i = schedule.start_time; i < schedule.end_time; i++)
-							weekDays[6].push({time: i, open: schedule.open});
-						break;
-					case 'sunday':
-						for(let i = schedule.start_time; i < schedule.end_time; i++)
-							weekDays[0].push({time: i, open: schedule.open});
-						break;
-					default:
-						break;
-				}
-			});
-
-			let tableHeader = getScheduleHeader();
-			let columnHeader = getHourIntervals(startTime, endTime);
-
-			fillScheduleTable(weekDays, tableHeader, columnHeader);
+			createScheduleTable(res.data.schedules);
+			setEditScheduleTable(res.data.schedules);
 		}
 	});
+}
+
+const createScheduleTable = function(schedules){
+	let startTime = 24, endTime = 1;
+	let weekDays = [ [], [], [], [], [], [], [] ];
+
+	schedules.forEach((schedule) => {
+		if(schedule.start_time < startTime)
+			startTime = schedule.start_time;
+		if(schedule.end_time > endTime)
+			endTime = schedule.end_time;
+
+		switch(schedule.weekDay.toLowerCase()){
+			case 'monday':
+				for(let i = schedule.start_time; i < schedule.end_time; i++)
+					weekDays[1].push({time: i, open: schedule.open});
+				break;
+			case 'tuesday':
+				for(let i = schedule.start_time; i < schedule.end_time; i++)
+					weekDays[2].push({time: i, open: schedule.open});
+				break;
+			case 'wednesday':
+				for(let i = schedule.start_time; i < schedule.end_time; i++)
+					weekDays[3].push({time: i, open: schedule.open});
+				break;
+			case 'thursday':
+				for(let i = schedule.start_time; i < schedule.end_time; i++)
+					weekDays[4].push({time: i, open: schedule.open});
+				break;
+			case 'friday':
+				for(let i = schedule.start_time; i < schedule.end_time; i++)
+					weekDays[5].push({time: i, open: schedule.open});
+				break;
+			case 'saturday':
+				for(let i = schedule.start_time; i < schedule.end_time; i++)
+					weekDays[6].push({time: i, open: schedule.open});
+				break;
+			case 'sunday':
+				for(let i = schedule.start_time; i < schedule.end_time; i++)
+					weekDays[0].push({time: i, open: schedule.open});
+				break;
+			default:
+				break;
+		}
+	});
+
+	let tableHeader = getScheduleHeader();
+	let columnHeader = getHourIntervals(startTime, endTime);
+
+	fillScheduleTable(weekDays, tableHeader, columnHeader);
 }
 
 const fillScheduleTable = function(content, header, columnHeader){
@@ -82,8 +86,6 @@ const fillScheduleTable = function(content, header, columnHeader){
 				tHeadRow.appendChild(addTh(header[i].date, 'col'));
 		tHead.appendChild(tHeadRow);
 	scheduleTable.appendChild(tHead);
-
-	console.log(content);
 
 	let tBody = document.createElement('tbody');
 		columnHeader.forEach((hd) => {
@@ -107,6 +109,25 @@ const fillScheduleTable = function(content, header, columnHeader){
 			tBody.appendChild(tBodyRow);
 		});
 	scheduleTable.appendChild(tBody);
+}
+
+const setEditScheduleTable = function(schedules){
+	schedules.forEach((sh) => {
+		let idName = '';
+		if(sh.start_time < 13)
+			idName = sh.weekDay + '-morning';
+		else if(sh.start_time < 19)
+			idName = sh.weekDay + '-noon';
+		else if(sh.start_time < 23)
+			idName = sh.weekDay + '-night';
+		else
+			return;
+
+		console.log(idName);
+		gId(idName + '-open').checked = (sh.open == 1) ? true : false;
+		gId(idName + '-startTime').value = sh.start_time;
+		gId(idName + '-endTime').value = sh.end_time;
+	});
 }
 
 /*******************

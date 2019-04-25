@@ -36,8 +36,11 @@
 	  	</div>  
 	</nav>
 
+	<!-- CONTENT -->
 	<content class="container">
 		<div class="col-md-12">
+
+			<!-- Schedules/Equipments/Users navtabs -->
 			<ul class="nav nav-tabs" id="adminTab" role="tablist">
 				<li class="nav-item">
 	    			<a class="nav-link active" id="schedule-tab" data-toggle="tab" href="#schedule" role="tab" aria-controls="schedule" aria-selected="true">Horários</a>
@@ -51,11 +54,383 @@
 			</ul>
 			
 			<div class="tab-content" id="adminTabContent">
+
+				<!-- SCHEDULES -->
 	  			<div class="tab-pane fade show active container-fluid border border-top-0 table-responsive" id="schedule" role="tabpanel" aria-labelledby="schedule-tab">
 	  				<br>
 	  				<div class="d-flex flex-row col-md-12">
-	  					<p>Legenda: <span class="text-white bg-warning legenda">Notificações</span> <span class="text-white bg-success legenda">Com reservas</span> <span class="text-white bg-danger legenda">Indisponível</span> <span class="text-white bg-secondary legenda">Terminado</span></p> <p id="editSchedule" class="ml-auto"><a href="#">Editar</a></p>
+	  					<p>Legenda: <span class="text-white bg-warning legenda">Notificações</span> <span class="text-white bg-success legenda">Com reservas</span> <span class="text-white bg-danger legenda">Indisponível</span> <span class="text-white bg-secondary legenda">Terminado</span></p> <p id="editSchedule" class="ml-auto"><a href="#"data-toggle="modal" data-target="#editSchedules">Editar</a></p>
 	  				</div>
+
+	  				<!-- SCHEDULES EDIT MODAL -->
+					<div class="modal fade" id="editSchedules" tabindex="-1" role="dialog" aria-labelledby="editSchedules" aria-hidden="true">
+						<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+					    	<div class="modal-content">
+					      		<div class="modal-header">
+					        		<h5 class="modal-title">Gerenciar Horários</h5>
+					        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					          			<span aria-hidden="true">&times;</span>
+					        		</button>
+					      		</div>
+					      		<div class="modal-body">
+					        		<div class="container-fluid table-responsive">
+					        			<form action="#">
+					        				<table class="table">
+					        					<thead>
+					        						<tr>
+					        							<th scope="col"> </th>
+					        							<th scope="col">Horário</th>
+					        							<th scope="col">Disponível</th>
+					        							<th scope="col">Abertura</th>
+					        							<th scope="col">Fechamento</th>
+					        						</tr>
+					        					</thead>
+					        					<tbody>
+					        						<tr>
+					        							<th scope="row" rowspan="3">Segunda</th>
+					        							<td>Manhã</td>
+					        							<td>
+					        								<input type="checkbox" class="form-check form-check-inline" name="monday-morning-open" id="monday-morning-open">
+					        							</td>
+					        							<td>
+					        								<input type="number" class="form-control form-control-sm" min="1" max="12" name="monday-morning-startTime" id="monday-morning-startTime" value="8">
+					        							</td>
+					        							<td>
+					        								<input type="number" class="form-control form-control-sm" min="1" max="13" name="monday-morning-endTime" id="monday-morning-endTime" value="12">
+					        							</td>
+					        						</tr>
+					        						<tr>
+					        							<td>Tarde</td>
+					        							<td>
+					        								<input type="checkbox" class="form-check form-check-inline" name="monday-noon-open" id="monday-noon-open">
+					        							</td>
+					        							<td>
+					        								<input type="number" class="form-control form-control-sm" min="13" max="18" name="monday-noon-startTime" id="monday-noon-startTime" value="13">
+					        							</td>
+					        							<td>
+					        								<input type="number" class="form-control form-control-sm" min="14" max="19" name="monday-noon-endTime" id="monday-noon-endTime" value="18">
+					        							</td>
+					        						</tr>
+					        						<tr>
+					        							<td>Noite</td>
+					        							<td>
+					        								<input type="checkbox" class="form-check form-check-inline" name="monday-night-open" id="monday-night-open">
+					        							</td>
+					        							<td>
+					        								<input type="number" class="form-control form-control-sm" min="19" max="22" name="monday-night-startTime" id="monday-night-startTime" value="19">
+					        							</td>
+					        							<td>
+					        								<input type="number" class="form-control form-control-sm" min="19" max="23" name="monday-night-endTime" id="monday-night-endTime" value="22">
+					        							</td>
+					        						</tr>
+					        					</tbody>
+
+					        					<thead>
+					        						<tr>
+					        							<th scope="col"> </th>
+					        							<th scope="col">Horário</th>
+					        							<th scope="col">Disponível</th>
+					        							<th scope="col">Abertura</th>
+					        							<th scope="col">Fechamento</th>
+					        						</tr>
+					        					</thead>
+					        					<tbody>
+					        						<tr>
+					        							<th scope="row" rowspan="3">Terça</th>
+					        							<td>Manhã</td>
+					        							<td>
+					        								<input type="checkbox" class="form-check form-check-inline" name="tuesday-morning-open" id="tuesday-morning-open">
+					        							</td>
+					        							<td>
+					        								<input type="number" class="form-control form-control-sm" min="1" max="12" name="tuesday-morning-startTime" id="tuesday-morning-startTime" value="8">
+					        							</td>
+					        							<td>
+					        								<input type="number" class="form-control form-control-sm" min="1" max="13" name="tuesday-morning-endTime" id="tuesday-morning-endTime" value="12">
+					        							</td>
+					        						</tr>
+					        						<tr>
+					        							<td>Tarde</td>
+					        							<td>
+					        								<input type="checkbox" class="form-check form-check-inline" name="tuesday-noon-open" id="tuesday-noon-open">
+					        							</td>
+					        							<td>
+					        								<input type="number" class="form-control form-control-sm" min="13" max="18" name="tuesday-noon-startTime" id="tuesday-noon-startTime" value="13">
+					        							</td>
+					        							<td>
+					        								<input type="number" class="form-control form-control-sm" min="14" max="19" name="tuesday-noon-endTime" id="tuesday-noon-endTime" value="18">
+					        							</td>
+					        						</tr>
+					        						<tr>
+					        							<td>Noite</td>
+					        							<td>
+					        								<input type="checkbox" class="form-check form-check-inline" name="tuesday-night-open">
+					        							</td>
+					        							<td>
+					        								<input type="number" class="form-control form-control-sm" min="19" max="22" name="tuesday-night-startTime" value="19">
+					        							</td>
+					        							<td>
+					        								<input type="number" class="form-control form-control-sm" min="19" max="23" name="tuesday-night-endTime" value="22">
+					        							</td>
+					        						</tr>
+					        					</tbody>
+
+					        					<thead>
+					        						<tr>
+					        							<th scope="col"> </th>
+					        							<th scope="col">Horário</th>
+					        							<th scope="col">Disponível</th>
+					        							<th scope="col">Abertura</th>
+					        							<th scope="col">Fechamento</th>
+					        						</tr>
+					        					</thead>
+					        					<tbody>
+					        						<tr>
+					        							<th scope="row" rowspan="3">Quarta</th>
+					        							<td>Manhã</td>
+					        							<td>
+					        								<input type="checkbox" class="form-check form-check-inline" name="wednesday-morning-open" id="wednesday-morning-open">
+					        							</td>
+					        							<td>
+					        								<input type="number" class="form-control form-control-sm" min="1" max="12" name="wednesday-morning-startTime" id="wednesday-morning-startTime" value="8">
+					        							</td>
+					        							<td>
+					        								<input type="number" class="form-control form-control-sm" min="1" max="13" name="wednesday-morning-endTime" id="wednesday-morning-endTime" value="12">
+					        							</td>
+					        						</tr>
+					        						<tr>
+					        							<td>Tarde</td>
+					        							<td>
+					        								<input type="checkbox" class="form-check form-check-inline" name="wednesday-noon-open" id="wednesday-noon-open">
+					        							</td>
+					        							<td>
+					        								<input type="number" class="form-control form-control-sm" min="13" max="18" name="wednesday-noon-startTime" id="wednesday-noon-startTime" value="13">
+					        							</td>
+					        							<td>
+					        								<input type="number" class="form-control form-control-sm" min="14" max="19" name="wednesday-noon-endTime" id="wednesday-noon-endTime" value="18">
+					        							</td>
+					        						</tr>
+					        						<tr>
+					        							<td>Noite</td>
+					        							<td>
+					        								<input type="checkbox" class="form-check form-check-inline" name="wednesday-night-open" id="wednesday-night-open">
+					        							</td>
+					        							<td>
+					        								<input type="number" class="form-control form-control-sm" min="19" max="22" name="wednesday-night-startTime" id="wednesday-night-startTime" value="19">
+					        							</td>
+					        							<td>
+					        								<input type="number" class="form-control form-control-sm" min="19" max="23" name="wednesday-night-endTime" id="wednesday-night-endTime" value="22">
+					        							</td>
+					        						</tr>
+					        					</tbody>
+
+					        					<thead>
+					        						<tr>
+					        							<th scope="col"> </th>
+					        							<th scope="col">Horário</th>
+					        							<th scope="col">Disponível</th>
+					        							<th scope="col">Abertura</th>
+					        							<th scope="col">Fechamento</th>
+					        						</tr>
+					        					</thead>
+					        					<tbody>
+					        						<tr>
+					        							<th scope="row" rowspan="3">Quinta</th>
+					        							<td>Manhã</td>
+					        							<td>
+					        								<input type="checkbox" class="form-check form-check-inline" name="thursday-morning-open" id="thursday-morning-open">
+					        							</td>
+					        							<td>
+					        								<input type="number" class="form-control form-control-sm" min="1" max="12" name="thursday-morning-startTime" id="thursday-morning-startTime" value="8">
+					        							</td>
+					        							<td>
+					        								<input type="number" class="form-control form-control-sm" min="1" max="13" name="thursday-morning-endTime" id="thursday-morning-endTime" value="12">
+					        							</td>
+					        						</tr>
+					        						<tr>
+					        							<td>Tarde</td>
+					        							<td>
+					        								<input type="checkbox" class="form-check form-check-inline" name="thursday-noon-open" id="thursday-noon-open">
+					        							</td>
+					        							<td>
+					        								<input type="number" class="form-control form-control-sm" min="13" max="18" name="thursday-noon-startTime" id="thursday-noon-startTime" value="13">
+					        							</td>
+					        							<td>
+					        								<input type="number" class="form-control form-control-sm" min="14" max="19" name="thursday-noon-endTime" id="thursday-noon-endTime" value="18">
+					        							</td>
+					        						</tr>
+					        						<tr>
+					        							<td>Noite</td>
+					        							<td>
+					        								<input type="checkbox" class="form-check form-check-inline" name="thursday-night-open" id="thursday-night-open">
+					        							</td>
+					        							<td>
+					        								<input type="number" class="form-control form-control-sm" min="19" max="22" name="thursday-night-startTime" id="thursday-night-startTime" value="19">
+					        							</td>
+					        							<td>
+					        								<input type="number" class="form-control form-control-sm" min="19" max="23" name="thursday-night-endTime" id="thursday-night-endTime" value="22">
+					        							</td>
+					        						</tr>
+					        					</tbody>
+
+					        					<thead>
+					        						<tr>
+					        							<th scope="col"> </th>
+					        							<th scope="col">Horário</th>
+					        							<th scope="col">Disponível</th>
+					        							<th scope="col">Abertura</th>
+					        							<th scope="col">Fechamento</th>
+					        						</tr>
+					        					</thead>
+					        					<tbody>
+					        						<tr>
+					        							<th scope="row" rowspan="3">Sexta</th>
+					        							<td>Manhã</td>
+					        							<td>
+					        								<input type="checkbox" class="form-check form-check-inline" name="friday-morning-open" id="friday-morning-open">
+					        							</td>
+					        							<td>
+					        								<input type="number" class="form-control form-control-sm" min="1" max="12" name="friday-morning-startTime" id="friday-morning-startTime" value="8">
+					        							</td>
+					        							<td>
+					        								<input type="number" class="form-control form-control-sm" min="1" max="13" name="friday-morning-endTime" id="friday-morning-endTime" value="12">
+					        							</td>
+					        						</tr>
+					        						<tr>
+					        							<td>Tarde</td>
+					        							<td>
+					        								<input type="checkbox" class="form-check form-check-inline" name="friday-noon-open" id="friday-noon-open">
+					        							</td>
+					        							<td>
+					        								<input type="number" class="form-control form-control-sm" min="13" max="18" name="friday-noon-startTime" id="friday-noon-startTime" value="13">
+					        							</td>
+					        							<td>
+					        								<input type="number" class="form-control form-control-sm" min="14" max="19" name="friday-noon-endTime" id="friday-noon-endTime" value="18">
+					        							</td>
+					        						</tr>
+					        						<tr>
+					        							<td>Noite</td>
+					        							<td>
+					        								<input type="checkbox" class="form-check form-check-inline" name="friday-night-open" id="friday-night-open">
+					        							</td>
+					        							<td>
+					        								<input type="number" class="form-control form-control-sm" min="19" max="22" name="friday-night-startTime" id="friday-night-startTime" value="19">
+					        							</td>
+					        							<td>
+					        								<input type="number" class="form-control form-control-sm" min="19" max="23" name="friday-night-endTime" id="friday-night-endTime" value="22">
+					        							</td>
+					        						</tr>
+					        					</tbody>
+
+					        					<thead>
+					        						<tr>
+					        							<th scope="col"> </th>
+					        							<th scope="col">Horário</th>
+					        							<th scope="col">Disponível</th>
+					        							<th scope="col">Abertura</th>
+					        							<th scope="col">Fechamento</th>
+					        						</tr>
+					        					</thead>
+					        					<tbody>
+					        						<tr>
+					        							<th scope="row" rowspan="3">Sábado</th>
+					        							<td>Manhã</td>
+					        							<td>
+					        								<input type="checkbox" class="form-check form-check-inline" name="saturday-morning-open" id="saturday-morning-open">
+					        							</td>
+					        							<td>
+					        								<input type="number" class="form-control form-control-sm" min="1" max="12" name="saturday-morning-startTime" id="saturday-morning-startTime" value="8">
+					        							</td>
+					        							<td>
+					        								<input type="number" class="form-control form-control-sm" min="1" max="13" name="saturday-morning-endTime" id="saturday-morning-endTime" value="12">
+					        							</td>
+					        						</tr>
+					        						<tr>
+					        							<td>Tarde</td>
+					        							<td>
+					        								<input type="checkbox" class="form-check form-check-inline" name="saturday-noon-open" id="saturday-noon-open">
+					        							</td>
+					        							<td>
+					        								<input type="number" class="form-control form-control-sm" min="13" max="18" name="saturday-noon-startTime" id="saturday-noon-startTime" value="13">
+					        							</td>
+					        							<td>
+					        								<input type="number" class="form-control form-control-sm" min="14" max="19" name="saturday-noon-endTime" id="saturday-noon-endTime" value="18">
+					        							</td>
+					        						</tr>
+					        						<tr>
+					        							<td>Noite</td>
+					        							<td>
+					        								<input type="checkbox" class="form-check form-check-inline" name="saturday-night-open" id="saturday-night-open">
+					        							</td>
+					        							<td>
+					        								<input type="number" class="form-control form-control-sm" min="19" max="22" name="saturday-night-startTime" id="saturday-night-startTime" value="19">
+					        							</td>
+					        							<td>
+					        								<input type="number" class="form-control form-control-sm" min="19" max="23" name="saturday-night-endTime" id="saturday-night-endTime" value="22">
+					        							</td>
+					        						</tr>
+					        					</tbody>
+
+					        					<thead>
+					        						<tr>
+					        							<th scope="col"> </th>
+					        							<th scope="col">Horário</th>
+					        							<th scope="col">Disponível</th>
+					        							<th scope="col">Abertura</th>
+					        							<th scope="col">Fechamento</th>
+					        						</tr>
+					        					</thead>
+					        					<tbody>
+					        						<tr>
+					        							<th scope="row" rowspan="3">Domingo</th>
+					        							<td>Manhã</td>
+					        							<td>
+					        								<input type="checkbox" class="form-check form-check-inline" name="sunday-morning-open" id="sunday-morning-open">
+					        							</td>
+					        							<td>
+					        								<input type="number" class="form-control form-control-sm" min="1" max="12" name="sunday-morning-startTime" id="sunday-morning-startTime" value="8">
+					        							</td>
+					        							<td>
+					        								<input type="number" class="form-control form-control-sm" min="1" max="13" name="sunday-morning-endTime" id="sunday-morning-endTime" value="12">
+					        							</td>
+					        						</tr>
+					        						<tr>
+					        							<td>Tarde</td>
+					        							<td>
+					        								<input type="checkbox" class="form-check form-check-inline" name="sunday-noon-open" id="sunday-noon-open">
+					        							</td>
+					        							<td>
+					        								<input type="number" class="form-control form-control-sm" min="13" max="18" name="sunday-noon-startTime" id="sunday-noon-startTime" value="13">
+					        							</td>
+					        							<td>
+					        								<input type="number" class="form-control form-control-sm" min="14" max="19" name="sunday-noon-endTime" id="sunday-noon-endTime" value="18">
+					        							</td>
+					        						</tr>
+					        						<tr>
+					        							<td>Noite</td>
+					        							<td>
+					        								<input type="checkbox" class="form-check form-check-inline" name="sunday-night-open" id="sunday-night-open">
+					        							</td>
+					        							<td>
+					        								<input type="number" class="form-control form-control-sm" min="19" max="22" name="sunday-night-startTime" id="sunday-night-startTime" value="19">
+					        							</td>
+					        							<td>
+					        								<input type="number" class="form-control form-control-sm" min="19" max="23" name="sunday-night-endTime" id="sunday-night-endTime" value="22">
+					        							</td>
+					        						</tr>
+					        					</tbody>
+					        				</table>					        				
+					        			</form>
+					        		</div>
+					      		</div>
+					      		<div class="modal-footer">
+					        		<button type="button" class="btn btn-primary">Salvar alterações</button>
+					        		<button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+					      		</div>
+					    	</div>
+					  	</div>
+					</div>
+
+					<!-- SCHEDULES TABLE -->
 	  				<table id="schedule-table" class="table table-sm table-bordered table-hover">
 					</table>
 	  			</div>
