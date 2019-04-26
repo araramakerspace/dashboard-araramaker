@@ -117,7 +117,23 @@ db.signIn = async function(user){
 //UPDATE
 
 db.updateSchedules = async function(schedules){
-	return true;
+	let query = "";
+	let res;
+	
+	schedules.forEach((sh) => {
+		query += `UPDATE Schedules SET start_time = ${sh.morning.startTime}, end_time = ${sh.morning.endTime}, open = ${(sh.morning.check)? 1 : 0} WHERE weekDay = '${sh.weekDay}' AND period = 'morning';`;
+		query += `UPDATE Schedules SET start_time = ${sh.noon.startTime}, end_time = ${sh.noon.endTime}, open = ${(sh.noon.check)? 1 : 0} WHERE weekDay = '${sh.weekDay}' AND period = 'noon';`;
+		query += `UPDATE Schedules SET start_time = ${sh.night.startTime}, end_time = ${sh.night.endTime}, open = ${(sh.night.check)? 1 : 0} WHERE weekDay = '${sh.weekDay}' AND period = 'night';`;
+	});
+	await this.exec(query)
+	.then(() => {
+		res = true;
+	})
+	.catch((err) => {
+		res = false;
+	});
+
+	return res;
 }
 
 module.exports = db;

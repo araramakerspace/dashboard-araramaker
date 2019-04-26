@@ -32,13 +32,25 @@ const saveSchedules = async function(button){
 	if(validateSchedulesEdit(inputs)){
 		await axios.post('/updateSchedules', inputs)
 		.then(res => {
-			if(res.status != 200)
+			if(res.status != 200){
 				console.error(res);
-			else
+				alert("Houve um erro ao atualizar os horários.");
+			}
+			else{
 				console.log(res);
+				$('#editSchedules').modal('hide');
+				refreshSchedules();
+			}
 		})
 	}
 	button.disabled = false;
+}
+
+const refreshSchedules = function(){
+	let table = gId("schedule-table");
+	while(table.firstChild)
+		table.removeChild(table.firstChild);
+	getSchedules();
 }
 
 const createScheduleTable = function(schedules){
@@ -88,7 +100,7 @@ const createScheduleTable = function(schedules){
 	let tableHeader = getScheduleHeader();
 	let columnHeader = getHourIntervals(startTime, endTime);
 
-	fillScheduleTable(weekDays, tableHeader, columnHeader);
+	fillScheduleTable(synchronizeWeekdays(weekDays), tableHeader, columnHeader);
 }
 
 const fillScheduleTable = function(content, header, columnHeader){
@@ -150,9 +162,15 @@ const setEditScheduleTable = function(schedules){
 
 *******************/
 
-Array.prototype.move = function (from, to) {
-  this.splice(to, 0, this.splice(from, 1)[0]);
-};
+const synchronizeWeekdays = function(weekDays){
+	let date = new Date();
+	for(let i = 0; i < date.getDay(); i++){
+		let day = weekDays.shift();
+		weekDays.push(day);
+	}
+
+	return weekDays;
+}
 
 const getDateInStandard = function(date, dayOffset){
 	let newDay = new Date();
@@ -193,9 +211,9 @@ const getSchedulesEditInputs = function(){
 				return null;
 		}
 		arr.push({weekDay: weekDay});
-		arr[i].morning = {check: gId(weekDay+'-morning-open').value, startTime: gId(weekDay+'-morning-startTime').value, endTime: gId(weekDay+'-morning-endTime').value};
-		arr[i].noon = {check: gId(weekDay+'-noon-open').value, startTime: gId(weekDay+'-noon-startTime').value, endTime: gId(weekDay+'-noon-endTime').value};
-		arr[i].night = {check: gId(weekDay+'-night-open').value, startTime: gId(weekDay+'-night-startTime').value, endTime: gId(weekDay+'-night-endTime').value};
+		arr[i].morning = {check: gId(weekDay+'-morning-open').checked, startTime: gId(weekDay+'-morning-startTime').value, endTime: gId(weekDay+'-morning-endTime').value};
+		arr[i].noon = {check: gId(weekDay+'-noon-open').checked, startTime: gId(weekDay+'-noon-startTime').value, endTime: gId(weekDay+'-noon-endTime').value};
+		arr[i].night = {check: gId(weekDay+'-night-open').checked, startTime: gId(weekDay+'-night-startTime').value, endTime: gId(weekDay+'-night-endTime').value};
 	}
 	return arr;
 }

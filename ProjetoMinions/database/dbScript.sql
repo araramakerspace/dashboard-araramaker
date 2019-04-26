@@ -18,6 +18,7 @@ qtd          integer NOT NULL
 CREATE TABLE Schedules(
 id_schedule integer NOT NULL PRIMARY KEY AUTOINCREMENT ,
 weekDay     varchar NOT NULL ,
+period		varchar NOT NULL,
 start_time  integer NOT NULL ,
 end_time	integer NOT NULL ,
 open		binary NOT NULL
