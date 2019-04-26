@@ -114,5 +114,11 @@ db.signIn = async function(user){
 		]);
 }
 
+//UPDATE
+
+db.updateSchedules = async function(schedules){
+	return true;
+}
+
 module.exports = db;
 

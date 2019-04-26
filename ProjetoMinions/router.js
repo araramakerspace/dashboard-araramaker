@@ -113,4 +113,22 @@ router.get('/schedules', (req, res) => {
 	});
 })
 
+router.post('/updateSchedules', (req, res) => {
+	if(req.session.user){
+		if(req.session.user.permission == 1){
+			sql.updateSchedules(req.body)
+			.then((result) => {
+				if(result)
+					res.send("Atualizado!");
+				else
+					res.status(500).send("Error updating schedules.");
+			})
+		}
+		else
+			res.status(401).send("Unauthorized acess");
+	}
+	else
+		res.status(403).send("Access denied");
+})
+
 module.exports = router;

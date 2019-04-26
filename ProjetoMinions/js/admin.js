@@ -26,6 +26,21 @@ const getSchedules = async function(){
 	});
 }
 
+const saveSchedules = async function(button){
+	button.disabled = "true";
+	let inputs = getSchedulesEditInputs();
+	if(validateSchedulesEdit(inputs)){
+		await axios.post('/updateSchedules', inputs)
+		.then(res => {
+			if(res.status != 200)
+				console.error(res);
+			else
+				console.log(res);
+		})
+	}
+	button.disabled = false;
+}
+
 const createScheduleTable = function(schedules){
 	let startTime = 24, endTime = 1;
 	let weekDays = [ [], [], [], [], [], [], [] ];
@@ -123,7 +138,6 @@ const setEditScheduleTable = function(schedules){
 		else
 			return;
 
-		console.log(idName);
 		gId(idName + '-open').checked = (sh.open == 1) ? true : false;
 		gId(idName + '-startTime').value = sh.start_time;
 		gId(idName + '-endTime').value = sh.end_time;
@@ -147,6 +161,43 @@ const getDateInStandard = function(date, dayOffset){
 	let mm = String(newDay.getMonth()+1).padStart(2, '0');
 
 	return {date: dd + '/' + mm, day: dd };
+}
+
+const getSchedulesEditInputs = function(){
+	let arr = [];
+	for(let i = 0; i < 7; i++){
+		let weekDay;
+		switch(i){
+			case 0:
+				weekDay = 'sunday';
+				break;
+			case 1:
+				weekDay = 'monday';
+				break;
+			case 2:
+				weekDay = 'tuesday';
+				break;
+			case 3:
+				weekDay = 'wednesday';
+				break;
+			case 4:
+				weekDay = 'thursday';
+				break;
+			case 5:
+				weekDay = 'friday';
+				break;
+			case 6:
+				weekDay = 'saturday';
+				break;
+			default:
+				return null;
+		}
+		arr.push({weekDay: weekDay});
+		arr[i].morning = {check: gId(weekDay+'-morning-open').value, startTime: gId(weekDay+'-morning-startTime').value, endTime: gId(weekDay+'-morning-endTime').value};
+		arr[i].noon = {check: gId(weekDay+'-noon-open').value, startTime: gId(weekDay+'-noon-startTime').value, endTime: gId(weekDay+'-noon-endTime').value};
+		arr[i].night = {check: gId(weekDay+'-night-open').value, startTime: gId(weekDay+'-night-startTime').value, endTime: gId(weekDay+'-night-endTime').value};
+	}
+	return arr;
 }
 
 const getScheduleHeader = function(){
@@ -185,6 +236,40 @@ const addTd = function(tdClass, badge){
 	return td;
 }
 
+const validateSchedulesEdit = function(inputs){
+	let valid = true;
+	inputs.forEach((day) => {
+		if(parseInt(day.morning.startTime) >= parseInt(day.morning.endTime)){
+			gId(`${day.weekDay}-morning-startTime`).setCustomValidity('invalid');
+			gId(`${day.weekDay}-morning-endTime`).setCustomValidity('invalid');
+			valid = false;
+		}
+		else
+			gId(`${day.weekDay}-morning-startTime`).setCustomValidity('');
+
+		if(parseInt(day.noon.startTime) >= parseInt(day.noon.endTime)){
+			gId(`${day.weekDay}-noon-startTime`).setCustomValidity('invalid');
+			gId(`${day.weekDay}-noon-endTime`).setCustomValidity('invalid');
+			valid = false;
+		}
+		else
+			gId(`${day.weekDay}-noon-startTime`).setCustomValidity('');
+
+		if(parseInt(day.night.startTime) >= parseInt(day.night.endTime)){
+			gId(`${day.weekDay}-night-startTime`).setCustomValidity('invalid');
+			gId(`${day.weekDay}-night-endTime`).setCustomValidity('invalid');
+			valid = false;
+		}
+		else
+			gId(`${day.weekDay}-night-startTime`).setCustomValidity('');
+	});
+
+	if(!gId("editSchedulesForm").checkValidity())
+		valid = false;
+
+	return valid;
+}
+
 /******************
 
 	EVENTS
@@ -193,4 +278,9 @@ const addTd = function(tdClass, badge){
 
 window.addEventListener('load', ()=> {
 	getSchedules();
+});
+
+
+gId("saveSchedules").addEventListener('click',(e) => {
+	saveSchedules(e.target);
 });
