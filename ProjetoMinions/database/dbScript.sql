@@ -2,7 +2,7 @@ CREATE TABLE Users(
 id_user    integer NOT NULL PRIMARY KEY AUTOINCREMENT ,
 name       varchar(60) NOT NULL ,
 email      varchar(60) NOT NULL ,
-cpf        varchar(60) NOT NULL ,
+cpf        varchar(11) NOT NULL UNIQUE ,
 hash       varchar NOT NULL ,
 salt       varchar NOT NULL ,
 permission binary NOT NULL
@@ -15,10 +15,13 @@ description  text NOT NULL ,
 qtd          integer NOT NULL
 );
 
-CREATE TABLE Schedule(
+CREATE TABLE Schedules(
 id_schedule integer NOT NULL PRIMARY KEY AUTOINCREMENT ,
-date        date NOT NULL ,
-start_time  integer NOT NULL
+weekDay     varchar NOT NULL ,
+period		varchar NOT NULL,
+start_time  integer NOT NULL ,
+end_time	integer NOT NULL ,
+open		binary NOT NULL
 );
 
 CREATE TABLE Schedule_Equipments(
@@ -35,8 +38,12 @@ CREATE TABLE Reservation
 id_reservation integer NOT NULL PRIMARY KEY AUTOINCREMENT ,
 id_user        integer NOT NULL ,
 id_schedule    integer NOT NULL ,
+start_time	   integer NOT NULL ,
+confirmed	   binary NOT NULL,
+date		   date NOT NULL,
 FOREIGN KEY (id_user) REFERENCES Users (id_user),
-FOREIGN KEY (id_schedule) REFERENCES Schedule (id_schedule)
+FOREIGN KEY (id_schedule) REFERENCES Schedule (id_schedule),
+CONSTRAINT UN_Reservation UNIQUE (id_user, id_schedule, start_time)
 );
 
 CREATE TABLE Reservation_Equipment(

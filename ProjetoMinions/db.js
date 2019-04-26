@@ -26,14 +26,28 @@ db.getUserById = async function(id){
 
 	await this.get("SELECT id_user, name, email, cpf, permission FROM Users WHERE id_user = ?", [id])
 	.then((result) => {
-		if(result !== undefined){
+		if(result !== undefined)
 			user = result;
-		}
 		else
 			error = "Error getting user by id";
 	})
 
 	return {error, user};
+}
+
+db.getSchedules = async function(){
+	let schedules = {};
+	let error = null;
+
+	await this.all("SELECT weekDay, start_time, end_time, open FROM Schedules")
+	.then((result) => {
+		if(result !== undefined)
+			schedules = result;
+		else
+			error = "Error getting schedules";
+	});
+
+	return {schedules, error};
 }
 
 //VALIDATE
@@ -98,6 +112,28 @@ db.signIn = async function(user){
 		user.salt,
 		0
 		]);
+}
+
+//UPDATE
+
+db.updateSchedules = async function(schedules){
+	let query = "";
+	let res;
+	
+	schedules.forEach((sh) => {
+		query += `UPDATE Schedules SET start_time = ${sh.morning.startTime}, end_time = ${sh.morning.endTime}, open = ${(sh.morning.check)? 1 : 0} WHERE weekDay = '${sh.weekDay}' AND period = 'morning';`;
+		query += `UPDATE Schedules SET start_time = ${sh.noon.startTime}, end_time = ${sh.noon.endTime}, open = ${(sh.noon.check)? 1 : 0} WHERE weekDay = '${sh.weekDay}' AND period = 'noon';`;
+		query += `UPDATE Schedules SET start_time = ${sh.night.startTime}, end_time = ${sh.night.endTime}, open = ${(sh.night.check)? 1 : 0} WHERE weekDay = '${sh.weekDay}' AND period = 'night';`;
+	});
+	await this.exec(query)
+	.then(() => {
+		res = true;
+	})
+	.catch((err) => {
+		res = false;
+	});
+
+	return res;
 }
 
 module.exports = db;
