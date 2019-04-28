@@ -1,3 +1,16 @@
+/*
+	Main page functions file
+
+	Author: Raul Rosá
+	Created on: Friday, 26/04/2019
+
+	Objetives:
+		Contains the functions used in the main page "Index", which involves:
+		* Getting and setting the schedules table
+		* Making reservations based on authentication
+
+*/
+
 /********************
 
 	SCHEDULES

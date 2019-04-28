@@ -100,11 +100,12 @@ const alterNavbar = function(user, userId, permission){
 	loginDropdown.children[0].appendChild(userName);
 	addLogoutDropdown(loginDropdown);
 
-
-	//adds a new Admin tab for easy access
-	let navUl = gId('navUl');
-	if(navUl)
-		addAdminBar(navUl);
+	if(permission == 1){
+		//adds a new Admin tab for easy access
+		let navUl = gId('navUl');
+		if(navUl)
+			addAdminBar(navUl);
+	}
 
 }
 

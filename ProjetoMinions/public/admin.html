@@ -37,7 +37,7 @@
 	</nav>
 
 	<!-- CONTENT -->
-	<content class="container">
+	<main class="container">
 		<div class="col-md-12">
 
 			<!-- Schedules/Equipments/Users navtabs -->
@@ -436,15 +436,121 @@
 	  			</div>
 
 	  			<div class="tab-pane fade container-fluid border border-top-0" id="equipment" role="tabpanel" aria-labelledby="equipment-tab">
-	  				Equipamentos
+					<br>
+	  				<div class="d-flex flex-row col-md-12">
+	  					<a href="#" data-toggle="modal" data-target="#addEquipment">Adicionar Equipamento</a></p>
+	  				</div>
+
+	  				<!-- ADD EQUIPMENT MODAL -->
+					<div class="modal fade" id="addEquipment" tabindex="-1" role="dialog" aria-labelledby="addEquipment" aria-hidden="true">
+						<div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+					    	<div class="modal-content">
+					      		<div class="modal-header">
+					        		<h5 class="modal-title">Novo Equipamento</h5>
+					        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					          			<span aria-hidden="true">&times;</span>
+					        		</button>
+					      		</div>
+					      		<div class="modal-body">
+					        		<div class="container-fluid">
+					        			<form action="#" class="needs-validation" id="addEquipmentsForm">
+					        				<div class="from-group">
+												<input type="text" class="form-control" id="newEquipmentName" placeholder="Nome" aria-label="equipmentName" required>
+					        				</div>
+					        				<div class="from-group">
+												<textarea class="form-control" id="newEquipmentDescription" placeholder="Este equipamento é..." aria-label="equipmentDesc" required></textarea>
+					        				</div>
+					        				<div class="input-group form-row from-group">
+					        					<div class="input-group-prepend">
+					        						<label for="newEquipmentQtd" class="input-group-text">Quantidade: </label>
+        										</div>
+												<input type="number" class="form-control" id="newEquipmentQtd" value="0" min="0" aria-label="equipmentQtd" required>
+					        				</div>		
+					        			</form>
+					        		</div>
+					      		</div>
+					      		<div class="modal-footer">
+					        		<button type="button" class="btn btn-primary" id="saveNewEquipment">Criar equipamento</button>
+					        		<button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+					      		</div>
+					    	</div>
+					  	</div>
+					</div>
+
+					<!-- EDIT EQUIPMENT MODAL -->
+					<div class="modal fade" id="editEquipment" tabindex="-1" role="dialog" aria-labelledby="editEquipment" aria-hidden="true">
+						<div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+					    	<div class="modal-content">
+					      		<div class="modal-header">
+					        		<h5 class="modal-title">Alterar Equipamento</h5>
+					        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					          			<span aria-hidden="true">&times;</span>
+					        		</button>
+					      		</div>
+					      		<div class="modal-body">
+					        		<div class="container-fluid">
+					        			<form action="#" class="needs-validation" id="editEquipmentsForm">
+					        				<div class="from-group">
+												<input type="text" class="form-control" id="editEquipmentName" placeholder="Nome" aria-label="equipmentName" required>
+					        				</div>
+					        				<div class="from-group">
+												<textarea class="form-control" id="editEquipmentDescription" placeholder="Este equipamento é..." aria-label="equipmentDesc" required></textarea>
+					        				</div>
+					        				<div class="input-group form-row from-group">
+					        					<div class="input-group-prepend">
+					        						<label for="editEquipmentQtd" class="input-group-text">Quantidade: </label>
+        										</div>
+												<input type="number" class="form-control" id="editEquipmentQtd" value="0" min="0" aria-label="equipmentQtd" required>
+					        				</div>
+					        				<input type="hidden" name="equipmentID" id="editEquipmentId" required>		
+					        			</form>
+					        		</div>
+					      		</div>
+					      		<div class="modal-footer">
+					        		<button type="button" class="btn btn-primary" id="saveEditEquipment">Salvar alterações</button>
+					        		<button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+					      		</div>
+					    	</div>
+					  	</div>
+					</div>
+
+	  				<!-- EQUIPMENTS TABLE -->
+	  				<table class="table table-sm table-bordered table-hover">
+	  					<thead>
+	  						<tr>
+	  							<th scope="col">ID</th>
+	  							<th scope="col">Nome</th>
+	  							<th scope="col">Descrição</th>
+	  							<th scope="col">Quantidade</th>
+	  							<th scope="col">Opções</th>
+	  						</tr>
+	  					</thead>
+	  					<tbody id="equipments-table">
+	  						
+	  					</tbody>
+					</table>
 	  			</div>
 
 	  			<div class="tab-pane fade container-fluid border border-top-0" id="user" role="tabpanel" aria-labelledby="user-tab">
-	  				Usuários
+	  				<br>
+	  				<table class="table table-sm table-bordered table-hover">
+	  					<thead>
+	  						<tr>
+	  							<th scope="col">ID</th>
+	  							<th scope="col">Nome</th>
+	  							<th scope="col">Email</th>
+	  							<th scope="col">CPF</th>
+	  							<th scope="col">Permissao</th>
+	  						</tr>
+	  					</thead>
+	  					<tbody id="users-table">
+	  						
+	  					</tbody>
+					</table>
 	  			</div>
 			</div>
 		</div>
-	</content>
+	</main>
 
 
 <!-- Footer -->
