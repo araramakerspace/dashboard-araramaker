@@ -35,6 +35,21 @@ db.getUserById = async function(id){
 	return {error, user};
 }
 
+db.getUsers = async function(){
+	let users = {};
+	let error = null;
+
+	await this.all("SELECT id_user, name, email, cpf, permission FROM Users")
+	.then((result) => {
+		if(result !== undefined)
+			users = result;
+		else
+			error = "Error getting users";
+	});
+
+	return {users, error};
+}
+
 db.getSchedules = async function(){
 	let schedules = {};
 	let error = null;
@@ -48,6 +63,21 @@ db.getSchedules = async function(){
 	});
 
 	return {schedules, error};
+}
+
+db.getEquipments = async function(){
+	let equipments = {};
+	let error = null;
+
+	await this.all("SELECT id_equipment, name, description, qtd FROM Equipments")
+	.then((result) => {
+		if(result !== undefined)
+			equipments = result;
+		else
+			error = "Error getting equipments";
+	});
+
+	return {equipments, error};
 }
 
 //VALIDATE
@@ -114,6 +144,24 @@ db.signIn = async function(user){
 		]);
 }
 
+db.addEquipment = async function(equipment){
+	let res;
+	await this.run("INSERT INTO Equipments(name, description, qtd) VALUES(?, ?, ?)", [
+		equipment.name.toLowerCase(),
+		equipment.description,
+		equipment.qtd
+		]
+	)
+	.then(() => {
+		res = true;
+	})
+	.catch((err) => {
+		res = false;
+	});
+
+	return res;
+}
+
 //UPDATE
 
 db.updateSchedules = async function(schedules){
@@ -126,6 +174,55 @@ db.updateSchedules = async function(schedules){
 		query += `UPDATE Schedules SET start_time = ${sh.night.startTime}, end_time = ${sh.night.endTime}, open = ${(sh.night.check)? 1 : 0} WHERE weekDay = '${sh.weekDay}' AND period = 'night';`;
 	});
 	await this.exec(query)
+	.then(() => {
+		res = true;
+	})
+	.catch((err) => {
+		res = false;
+	});
+
+	return res;
+}
+
+db.updateEquipment = async function(equipment){
+	let res;
+	
+	await this.run("UPDATE Equipments SET name = ?, description = ?, qtd = ? WHERE id_equipment = ?",[
+			equipment.name,
+			equipment.description,
+			equipment.qtd,
+			equipment.id
+		])
+	.then(() => {
+		res = true;
+	})
+	.catch((err) => {
+		res = false;
+	});
+
+	return res;
+}
+
+db.alterUserPermission = async function(user){
+	let res;
+	
+	await this.run("UPDATE Users SET permission = 1")
+	.then(() => {
+		res = true;
+	})
+	.catch((err) => {
+		res = false;
+	});
+
+	return res;
+}
+
+//DELETE
+
+db.deleteEquipment = async function(idEquip){
+	let res;
+
+	await this.run("DELETE from Equipments WHERE id_equipment = ?", [ idEquip.id ])
 	.then(() => {
 		res = true;
 	})

@@ -38,12 +38,62 @@ router.get('/redefinirSenha', function(req, res){
 	res.status(404).send('Page not Found');
 });
 
+// DATA GET
+
+//This functions returns the session's info to the page
+router.get('/session', (req, res) => {
+	if(req.session.user)
+		res.send(JSON.stringify(req.session.user));
+	else
+		res.send(JSON.stringify({error: true}));
+})
+
+router.get('/users', (req, res) => {
+	sql.getUsers()
+	.then((data) => {
+		if(data.error)
+			res.status(500).send("Couldn't get database information.");
+		else
+			res.send(JSON.stringify(data));
+	});
+})
+
+router.get('/schedules', (req, res) => {
+	sql.getSchedules()
+	.then((data) => {
+		if(data.error)
+			res.status(500).send("Couldn't get database information.");
+		else
+			res.send(JSON.stringify(data));
+	});
+})
+
+router.get('/equipments', (req, res) => {
+	sql.getEquipments()
+	.then((data) => {
+		if(data.error)
+			res.status(500).send("Couldn't get database information.");
+		else
+			res.send(JSON.stringify(data));
+	});
+})
+
 // DATA POSTS
 
 router.post('/signin', function(req,res){
 	sql.signIn(req.body).then(
 		() => res.redirect('/')
 	);
+});
+
+router.post('/addEquipment', function(req,res){
+	sql.addEquipment(req.body)
+	.then((result) => {
+		if(result)
+			res.send("Inserindo!");
+		else
+			res.status(500).send("Error updating schedules.");
+	});
 });
 
 //This route logs the user in
@@ -73,6 +123,82 @@ router.get('/logout', (req, res) => {
 	}
 })
 
+// DATA UPDATE
+
+router.post('/updateSchedules', (req, res) => {
+	if(req.session.user){
+		if(req.session.user.permission == 1){
+			sql.updateSchedules(req.body)
+			.then((result) => {
+				if(result)
+					res.send("Atualizado!");
+				else
+					res.status(500).send("Error updating schedules.");
+			})
+		}
+		else
+			res.status(401).send("Unauthorized acess");
+	}
+	else
+		res.status(403).send("Access denied");
+})
+
+router.post('/editEquipment',(req, res) => {
+	if(req.session.user){
+		if(req.session.user.permission == 1){
+			sql.updateEquipment(req.body)
+			.then((result) => {
+				if(result)
+					res.send("Atualizado!");
+				else
+					res.status(500).send("Error updating equipments.");
+			})
+		}
+		else
+			res.status(401).send("Unauthorized acess");
+	}
+	else
+		res.status(403).send("Access denied");
+});
+
+router.post('/giveAdmin',(req, res) => {
+	if(req.session.user){
+		if(req.session.user.permission == 1){
+			sql.alterUserPermission(req.body)
+			.then((result) => {
+				if(result)
+					res.send("Atualizado!");
+				else
+					res.status(500).send("Error updating equipments.");
+			})
+		}
+		else
+			res.status(401).send("Unauthorized acess");
+	}
+	else
+		res.status(403).send("Access denied");
+});
+
+// DATA DELETE
+
+router.post('/deleteEquipment', (req, res) => {
+	if(req.session.user){
+		if(req.session.user.permission == 1){
+			sql.deleteEquipment(req.body)
+			.then((result) => {
+				if(result)
+					res.send("Deletado!");
+				else
+					res.status(500).send("Error updating schedules.");
+			})
+		}
+		else
+			res.status(401).send("Unauthorized acess");
+	}
+	else
+		res.status(403).send("Access denied");
+});
+
 // SERVICES
 
 //This function checks if there's already a user or cpf registered on the database, and returns true for each registry found
@@ -94,41 +220,5 @@ router.post('/checkLogin', (req, res) => {
 		res.send(JSON.stringify(data.validation));
 	});
 });
-
-//This functions returns the session's info to the page
-router.get('/session', (req, res) => {
-	if(req.session.user)
-		res.send(JSON.stringify(req.session.user));
-	else
-		res.send(JSON.stringify({error: true}));
-})
-
-router.get('/schedules', (req, res) => {
-	sql.getSchedules()
-	.then((data) => {
-		if(data.error)
-			res.status(500).send("Couldn't get database information.");
-		else
-			res.send(JSON.stringify(data));
-	});
-})
-
-router.post('/updateSchedules', (req, res) => {
-	if(req.session.user){
-		if(req.session.user.permission == 1){
-			sql.updateSchedules(req.body)
-			.then((result) => {
-				if(result)
-					res.send("Atualizado!");
-				else
-					res.status(500).send("Error updating schedules.");
-			})
-		}
-		else
-			res.status(401).send("Unauthorized acess");
-	}
-	else
-		res.status(403).send("Access denied");
-})
 
 module.exports = router;

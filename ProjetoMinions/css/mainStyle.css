@@ -61,6 +61,10 @@
 	color: #0a2242;
 }
 
+main{
+	min-height: 500px;
+}
+
 
 /* Footer */
 footer {

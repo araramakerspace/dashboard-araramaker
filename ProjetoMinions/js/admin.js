@@ -37,7 +37,6 @@ const saveSchedules = async function(button){
 				alert("Houve um erro ao atualizar os horários.");
 			}
 			else{
-				console.log(res);
 				$('#editSchedules').modal('hide');
 				refreshSchedules();
 			}
@@ -131,7 +130,7 @@ const fillScheduleTable = function(content, header, columnHeader){
 					else if(obj.open == 0)
 						tdClass = "bg-danger"; //closed
 					//Add the reserved color and notifications.
-					tBodyRow.appendChild(addTd(tdClass, notifications));
+					tBodyRow.appendChild(addScheduleTd(tdClass, notifications));
 				}
 			tBody.appendChild(tBodyRow);
 		});
@@ -153,6 +152,124 @@ const setEditScheduleTable = function(schedules){
 		gId(idName + '-open').checked = (sh.open == 1) ? true : false;
 		gId(idName + '-startTime').value = sh.start_time;
 		gId(idName + '-endTime').value = sh.end_time;
+	});
+}
+
+/********************
+
+	EQUIPMENTS
+
+********************/
+
+const getEquipments = async function(){
+	await axios.get('/equipments')
+	.then(res => {
+		if(!res.data.error)
+			createEquipmentTable(res.data.equipments);
+	});
+}
+
+const saveNewEquipment = async function(button){
+	button.disabled = "true";
+	let newName = gId("newEquipmentName");
+	let newDesc = gId("newEquipmentDescription");
+	let newQtd = gId("newEquipmentQtd");
+	let input = {name: newName.value, description: newDesc.value, qtd: newQtd.value};
+	if(gId("addEquipmentsForm").checkValidity()){
+		await axios.post('/addEquipment', input)
+		.then(res => {
+			if(res.status != 200){
+				console.error(res);
+				alert("Houve um erro ao inserir o equipments.");
+			}
+			else{
+				$('#addEquipment').modal('hide');
+				refreshEquipments();
+			}
+		});
+	}
+	else{
+		newName.setCustomValidity("invalid");
+		newDesc.setCustomValidity("invalid");
+		newQtd.setCustomValidity("invalid");
+	}
+	button.disabled = false;
+}
+
+const saveEditEquipment = async function(button){
+	button.disabled = "true";
+	let newId = gId("editEquipmentId");
+	let newName = gId("editEquipmentName");
+	let newDesc = gId("editEquipmentDescription");
+	let newQtd = gId("editEquipmentQtd");
+	let input = {id: newId.value, name: newName.value, description: newDesc.value, qtd: newQtd.value};
+	if(gId("editEquipmentsForm").checkValidity()){
+		await axios.post('/editEquipment', input)
+		.then(res => {
+			if(res.status != 200){
+				console.error(res);
+				alert("Houve um erro ao alterar o equipmento.");
+			}
+			else{
+				$('#editEquipment').modal('hide');
+				refreshEquipments();
+			}
+		});
+	}
+	else{
+		newName.setCustomValidity("invalid");
+		newDesc.setCustomValidity("invalid");
+		newQtd.setCustomValidity("invalid");
+	}
+	button.disabled = false;
+}
+
+const refreshEquipments = function(){
+	let table = gId("equipments-table");
+	while(table.firstChild)
+		table.removeChild(table.firstChild);
+	getEquipments();
+}
+
+const createEquipmentTable = function(equipments){
+	let table = gId('equipments-table');
+
+	equipments.forEach((equip) => {
+		let tRow = document.createElement('tr');
+			tRow.appendChild(addTd(equip.id_equipment));
+			tRow.appendChild(addTd(equip.name));
+			tRow.appendChild(addTd(equip.description));
+			tRow.appendChild(addTd(equip.qtd));
+			tRow.appendChild(addOpTd(null, tRow));
+		table.appendChild(tRow);
+	});
+}
+
+/*******************
+
+	USERS
+
+*******************/
+
+const getUsers = async function(){
+	await axios.get('/users')
+	.then(res => {
+		if(!res.data.error)
+			createUserTable(res.data.users);
+	});
+}
+
+const createUserTable = function(users){
+	let table = gId('users-table');
+
+	users.forEach((user) => {
+		let tRow = document.createElement('tr');
+		tRow.appendChild(addTd(user.id_user));
+		tRow.appendChild(addTd(user.name));
+		tRow.appendChild(addTd(user.email));
+		tRow.appendChild(addTd(user.cpf));
+		tRow.appendChild((parseInt(user.permission) == 1) ? addTd('Admin') : addPermTd(null, tRow));
+		table.appendChild(tRow);
 	});
 }
 
@@ -241,7 +358,53 @@ const addTh = function(text, scope){
 	return th;
 }
 
-const addTd = function(tdClass, badge){
+const addTd = function(data, tdClass){
+	let td = document.createElement('td');
+	td.className += tdClass;
+	td.appendChild(document.createTextNode(data));
+
+	return td;
+}
+
+const addOpTd = function(tdClass, row){
+	let td = document.createElement('td');
+	td.className += tdClass;
+		let updateLink = document.createElement('a');
+		updateLink.href = "#"
+		updateLink.innerHTML = 'Editar';
+		updateLink.className += "text-warning mr-2";
+		updateLink.addEventListener('click', () => {
+			toggleEditEquipmentModal(row);
+		});
+	td.appendChild(updateLink);
+
+		let deleteLink = document.createElement('a');
+		deleteLink.href = "#"
+		deleteLink.innerHTML = '&times;';
+		deleteLink.className += "text-danger";
+		deleteLink.addEventListener('click', () => {
+			deleteRow(row);
+		});
+	td.appendChild(deleteLink);
+
+	return td;
+}
+
+const addPermTd = function(tdClass, row){
+	let td = document.createElement('td');
+	td.className += tdClass;
+		let alterPermLink = document.createElement('a');
+		alterPermLink.href = "#"
+		alterPermLink.innerHTML = 'Transformar em Admin';
+		alterPermLink.addEventListener('click', () => {
+			giveAdmin(row);
+		});
+	td.appendChild(alterPermLink);
+
+	return td;
+}
+
+const addScheduleTd = function(tdClass, badge){
 	let td = document.createElement('td');
 	td.className += tdClass;
 	if(badge){
@@ -253,6 +416,12 @@ const addTd = function(tdClass, badge){
 
 	return td;
 }
+
+/***********************
+
+	VALIDATION
+
+**********************/
 
 const validateSchedulesEdit = function(inputs){
 	let valid = true;
@@ -288,6 +457,58 @@ const validateSchedulesEdit = function(inputs){
 	return valid;
 }
 
+/*****************
+
+	CLICK HANDLERS
+
+*****************/
+const deleteRow = async function(row){
+	let res = confirm("Deseja mesmo excluir este dado?");
+	if(res){
+		let id = parseInt(row.firstChild.textContent);
+		await axios.post('/deleteEquipment', {id: id})
+		.then((res) => {
+			if(res.status != 200){
+				console.error(res);
+				alert("Houve um erro ao inserir o equipments.");
+			}
+			else{
+				row.parentElement.removeChild(row);
+			}
+		})
+	}
+}
+
+const toggleEditEquipmentModal = async function(row){
+	$('#editEquipment').modal('show');
+	let values = [];
+	row.childNodes.forEach((child) => {
+		values.push(child.textContent);
+	});
+	gId("editEquipmentId").value = values[0];
+	gId("editEquipmentName").value = values[1];
+	gId("editEquipmentDescription").value = values[2];
+	gId("editEquipmentQtd").value = values[3];
+}
+
+const giveAdmin = async function(row){
+	let res = confirm("Deseja dar a este usuário permissões de administrador?");
+	if(res){
+		let id = parseInt(row.firstChild.textContent);
+		await axios.post('/giveAdmin', {id: id})
+		.then((res) => {
+			if(res.status != 200){
+				console.error(res);
+				alert("Houve um erro ao alterar as permissões.");
+			}
+			else{
+				row.removeChild(row.childNodes[4]);
+				row.appendChild(addTd('Admin'));
+			}
+		})
+	}
+}
+
 /******************
 
 	EVENTS
@@ -296,9 +517,20 @@ const validateSchedulesEdit = function(inputs){
 
 window.addEventListener('load', ()=> {
 	getSchedules();
+	getEquipments();
+	getUsers();
 });
 
 
 gId("saveSchedules").addEventListener('click',(e) => {
 	saveSchedules(e.target);
 });
+
+gId("saveNewEquipment").addEventListener('click',(e) => {
+	saveNewEquipment(e.target);
+})
+
+gId("saveEditEquipment").addEventListener('click',(e) => {
+	saveEditEquipment(e.target);
+})
+

@@ -1,5 +1,5 @@
 /*
-	Main functionalities file
+	Sign in methods file
 
 	Author: Raul Rosá
 	Created on: Friday, 12/04/2019
