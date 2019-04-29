@@ -96,6 +96,16 @@ router.post('/addEquipment', function(req,res){
 	});
 });
 
+router.post('/makeReservation', function(req,res){
+	sql.makeReservation(req.body)
+	.then((result) => {
+		if(result)
+			res.send("Made reservation!");
+		else
+			res.status(500).send("Error updating schedules.");
+	});
+});
+
 //This route logs the user in
 router.post('/login', (req, res) => {
 

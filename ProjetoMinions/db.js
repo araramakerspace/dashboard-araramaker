@@ -54,7 +54,7 @@ db.getSchedules = async function(){
 	let schedules = {};
 	let error = null;
 
-	await this.all("SELECT weekDay, start_time, end_time, open FROM Schedules")
+	await this.all("SELECT id_schedule, weekDay, start_time, end_time, open FROM Schedules")
 	.then((result) => {
 		if(result !== undefined)
 			schedules = result;
@@ -154,6 +154,36 @@ db.addEquipment = async function(equipment){
 	)
 	.then(() => {
 		res = true;
+	})
+	.catch((err) => {
+		res = false;
+	});
+
+	return res;
+}
+
+db.makeReservation = async function(reservation){
+	let res;
+	await this.run("INSERT INTO Reservation(id_user, id_schedule, start_time, confirmed, date) VALUES(?, ?, ?, ?, ?)", [
+		reservation.id_user,
+		reservation.id_schedule,
+		reservation.start_time,
+		reservation.confirmed,
+		reservation.date
+		]
+	)
+	.then((id) => {
+		let query = "INSERT INTO Reservation_Equipment(id_reservation, id_equipment, qtd) VALUES ";
+		reservation.equipment.forEach((equip, i) => {
+			query += `(${equip.id_reservation}, ${id_equipment}, ${qtd})${(i == (reservation.equipment.length - 1))}`;
+		});
+		this.run(query)
+		.then(() => {
+			res = true;
+		})
+		.catch((err) => {
+			res = false;
+		});
 	})
 	.catch((err) => {
 		res = false;

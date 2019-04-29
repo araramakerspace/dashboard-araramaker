@@ -30,7 +30,7 @@ id_schedule           integer NOT NULL ,
 id_equipment          integer NOT NULL ,
 qtd                   integer NOT NULL ,
 FOREIGN KEY (id_schedule) REFERENCES Schedule (id_schedule),
-FOREIGN KEY (id_equipment) REFERENCES Equipments (id_equipment)
+FOREIGN KEY (id_equipment) REFERENCES Equipments (id_equipment) ON DELETE CASCADE
 );
 
 CREATE TABLE Reservation
@@ -41,7 +41,7 @@ id_schedule    integer NOT NULL ,
 start_time	   integer NOT NULL ,
 confirmed	   binary NOT NULL,
 date		   date NOT NULL,
-FOREIGN KEY (id_user) REFERENCES Users (id_user),
+FOREIGN KEY (id_user) REFERENCES Users (id_user) ON DELETE CASCADE,
 FOREIGN KEY (id_schedule) REFERENCES Schedule (id_schedule),
 CONSTRAINT UN_Reservation UNIQUE (id_user, id_schedule, start_time)
 );
@@ -51,6 +51,6 @@ id_reservation_equipment integer NOT NULL PRIMARY KEY AUTOINCREMENT ,
 id_reservation           integer NOT NULL ,
 id_equipment             integer NOT NULL ,
 qtd                      integer NOT NULL ,
-FOREIGN KEY (id_reservation) REFERENCES Reservation (id_reservation),
-FOREIGN KEY (id_equipment) REFERENCES Equipments (id_equipment)
+FOREIGN KEY (id_reservation) REFERENCES Reservation (id_reservation) ON DELETE CASCADE,
+FOREIGN KEY (id_equipment) REFERENCES Equipments (id_equipment) ON DELETE CASCADE
 );

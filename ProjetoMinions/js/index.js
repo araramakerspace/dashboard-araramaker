@@ -78,7 +78,7 @@ const createScheduleTable = function(schedules){
 
 const getScheduleHeader = function(){
 	let today = new Date();
-	let tableHeader = [{date: 'Horários', day: null }, {date: 'Hoje', day: today.getDay() }];
+	let tableHeader = [{date: 'Horários', day: null }, {date: 'Hoje', day: today.getDay(), id: getDateInStandard(today).id }];
 	for(let i = 1; i < 7; i++)
 		tableHeader.push(getDateInStandard(today, i));
 	return tableHeader;
@@ -113,14 +113,19 @@ const fillScheduleTable = function(content, header, columnHeader){
 					let date = new Date();
 					let tdClass = "";
 					let notifications = null;
+					let tdId = null;
 					if(date.getHours() >= hd.startTime && date.getDay() == header[i+1].day)
 						tdClass = "bg-secondary"; //finished
 					else if(obj === undefined)
 						tdClass = "bg-danger"; //not exists
 					else if(obj.open == 0)
 						tdClass = "bg-danger"; //closed
+					else{
+						tdClass = "can-reserve" //can be reserved
+						tdId = `h-${hd.startTime}-${header[i+1].id}-${header[i+1].day}`;
+					}
 					//Add the reserved color and notifications.
-					tBodyRow.appendChild(addTd(tdClass, notifications));
+					tBodyRow.appendChild(addTd(tdClass, notifications, tdId));
 				}
 			tBody.appendChild(tBodyRow);
 		});
@@ -134,7 +139,7 @@ const addTh = function(text, scope){
 	return th;
 }
 
-const addTd = function(tdClass, badge){
+const addTd = function(tdClass, badge, id){
 	let td = document.createElement('td');
 	td.className += tdClass;
 	if(badge){
@@ -142,6 +147,12 @@ const addTd = function(tdClass, badge){
 		span.className += "badge badge-light";
 		span.appendChild(document.createTextNode(badge));
 		td.appendChild(span);
+	}
+	if(id){
+		td.id = id;
+		td.addEventListener('click', () => {
+			makeReservation(id);
+		});
 	}
 
 	return td;
@@ -169,10 +180,23 @@ const getDateInStandard = function(date, dayOffset){
 	let dd = String(newDay.getDate()).padStart(2, '0');
 	let mm = String(newDay.getMonth()+1).padStart(2, '0');
 
-	return {date: dd + '/' + mm, day: dd };
+	return {date: dd + '/' + mm, day: newDay.getDay(), id: dd + '-' + mm };
 }
 
+/*************************
 
+	RESERVATIONS
+
+*************************/
+
+const makeReservation = function(id){
+	let h = id.split('-');
+	let hour = h[1];
+	let day = h[2];
+	let month = h[3];
+	let weekDay = h[4];
+	console.log(`Attemping to make a reservation at ${hour} hours, in ${day}/${month}`);
+}
 
 /******************
 

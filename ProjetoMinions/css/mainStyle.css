@@ -150,3 +150,12 @@ footer .section-title {
 }
 }
 
+/**********************
+
+	reservatons
+
+**********************/
+
+.can-reserve{
+	cursor: pointer;
+}

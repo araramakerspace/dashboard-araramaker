@@ -194,6 +194,8 @@ const saveNewEquipment = async function(button){
 		newQtd.setCustomValidity("invalid");
 	}
 	button.disabled = false;
+	clearNewEquipmentForm();
+	refreshSchedules();
 }
 
 const saveEditEquipment = async function(button){
@@ -222,6 +224,7 @@ const saveEditEquipment = async function(button){
 		newQtd.setCustomValidity("invalid");
 	}
 	button.disabled = false;
+	refreshSchedules();
 }
 
 const refreshEquipments = function(){
@@ -295,7 +298,7 @@ const getDateInStandard = function(date, dayOffset){
 	let dd = String(newDay.getDate()).padStart(2, '0');
 	let mm = String(newDay.getMonth()+1).padStart(2, '0');
 
-	return {date: dd + '/' + mm, day: dd };
+	return {date: dd + '/' + mm, day: newDay.getDay() };
 }
 
 const getSchedulesEditInputs = function(){
@@ -349,6 +352,12 @@ const getHourIntervals = function(startTime, endTime){
 		intervals.push({interval:  `${i}:00 - ${i+1}:00`, startTime: i});
 	}
 	return intervals;
+}
+
+const clearNewEquipmentForm = function(){
+	gId("newEquipmentName").value = "";
+	gId("newEquipmentDescription").value = "";
+	gId("newEquipmentQtd").value = 0;
 }
 
 const addTh = function(text, scope){
@@ -474,6 +483,7 @@ const deleteRow = async function(row){
 			}
 			else{
 				row.parentElement.removeChild(row);
+				refreshSchedules();
 			}
 		})
 	}
