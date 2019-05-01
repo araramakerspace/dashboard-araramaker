@@ -26,6 +26,8 @@ window.addEventListener('load', async function(){
 			let user = res.data;
 			user.admin = (user.permission == 1);
 			alterNavbar(user.name, user.id_user, user.permission);
+			if(typeof loadReservationPanel === 'function')
+				loadReservationPanel(user);
 		}
 	});
 });
@@ -119,6 +121,7 @@ const addLogoutDropdown = function(loginDropdown){
 			let logoutLink = document.createElement('a');
 			logoutLink.href = "/logout";
 			logoutLink.className += "details";
+			logoutLink.addEventListener('click', () => sessionStorage.removeItem('user'));
 			logoutLink.appendChild(document.createTextNode("Sair"));
 
 			newLi.appendChild(logoutLink);
@@ -138,4 +141,31 @@ const addAdminBar = function(navUl){
 		newLi.appendChild(adminLink);
 
 	navUl.appendChild(newLi);
+}
+
+const getWeekDay = function(i){
+	switch(parseInt(i)){
+		case 0:
+			return 'sunday';
+			break;
+		case 1:
+			return 'monday';
+			break;
+		case 2:
+			return 'tuesday';
+			break;
+		case 3:
+			return 'wednesday';
+			break;
+		case 4:
+			return 'thursday';
+			break;
+		case 5:
+			return 'friday';
+			break;
+		case 6:
+		default:
+			return 'saturday';
+			break;
+	}
 }

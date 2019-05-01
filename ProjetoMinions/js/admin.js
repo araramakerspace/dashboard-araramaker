@@ -65,31 +65,31 @@ const createScheduleTable = function(schedules){
 		switch(schedule.weekDay.toLowerCase()){
 			case 'monday':
 				for(let i = schedule.start_time; i < schedule.end_time; i++)
-					weekDays[1].push({time: i, open: schedule.open});
+					weekDays[1].push({time: i, open: schedule.open, id: schedule.id_schedule});
 				break;
 			case 'tuesday':
 				for(let i = schedule.start_time; i < schedule.end_time; i++)
-					weekDays[2].push({time: i, open: schedule.open});
+					weekDays[2].push({time: i, open: schedule.open, id: schedule.id_schedule});
 				break;
 			case 'wednesday':
 				for(let i = schedule.start_time; i < schedule.end_time; i++)
-					weekDays[3].push({time: i, open: schedule.open});
+					weekDays[3].push({time: i, open: schedule.open, id: schedule.id_schedule});
 				break;
 			case 'thursday':
 				for(let i = schedule.start_time; i < schedule.end_time; i++)
-					weekDays[4].push({time: i, open: schedule.open});
+					weekDays[4].push({time: i, open: schedule.open, id: schedule.id_schedule});
 				break;
 			case 'friday':
 				for(let i = schedule.start_time; i < schedule.end_time; i++)
-					weekDays[5].push({time: i, open: schedule.open});
+					weekDays[5].push({time: i, open: schedule.open, id: schedule.id_schedule});
 				break;
 			case 'saturday':
 				for(let i = schedule.start_time; i < schedule.end_time; i++)
-					weekDays[6].push({time: i, open: schedule.open});
+					weekDays[6].push({time: i, open: schedule.open, id: schedule.id_schedule});
 				break;
 			case 'sunday':
 				for(let i = schedule.start_time; i < schedule.end_time; i++)
-					weekDays[0].push({time: i, open: schedule.open});
+					weekDays[0].push({time: i, open: schedule.open, id: schedule.id_schedule});
 				break;
 			default:
 				break;
@@ -102,7 +102,7 @@ const createScheduleTable = function(schedules){
 	fillScheduleTable(synchronizeWeekdays(weekDays), tableHeader, columnHeader);
 }
 
-const fillScheduleTable = function(content, header, columnHeader){
+const fillScheduleTable = async function(content, header, columnHeader){
 	let scheduleTable = gId("schedule-table");
 
 	//Add the table header
@@ -113,28 +113,45 @@ const fillScheduleTable = function(content, header, columnHeader){
 		tHead.appendChild(tHeadRow);
 	scheduleTable.appendChild(tHead);
 
-	let tBody = document.createElement('tbody');
-		columnHeader.forEach((hd) => {
-			let tBodyRow = document.createElement('tr');
-				tBodyRow.appendChild(addTh(hd.interval, 'row'));
+	await axios.post('/getReservations')
+	.then((res) => {
+		let reservations = res.data;
 
-				for(let i = 0; i < content.length; i++){
-					let obj = content[i].find((obj) => {return obj.time == hd.startTime});
-					let date = new Date();
-					let tdClass = "";
-					let notifications = null;
-					if(date.getHours() >= hd.startTime && date.getDay() == header[i+1].day)
-						tdClass = "bg-secondary"; //finished
-					else if(obj === undefined)
-						tdClass = "bg-danger"; //not exists
-					else if(obj.open == 0)
-						tdClass = "bg-danger"; //closed
-					//Add the reserved color and notifications.
-					tBodyRow.appendChild(addScheduleTd(tdClass, notifications));
-				}
-			tBody.appendChild(tBodyRow);
-		});
-	scheduleTable.appendChild(tBody);
+		let tBody = document.createElement('tbody');
+			columnHeader.forEach((hd) => {
+				let tBodyRow = document.createElement('tr');
+					tBodyRow.appendChild(addTh(hd.interval, 'row'));
+
+					for(let i = 0; i < content.length; i++){
+						let obj = content[i].find((obj) => {return obj.time == hd.startTime});
+						let todayReservations = reservations.filter((obj) => {return obj.start_time == hd.startTime && obj.weekDay == getWeekDay(header[i+1].day)});
+						let reservationsToConfirm = todayReservations.filter((obj) => {return parseInt(obj.confirmed) == 0})
+						let date = new Date();
+						let tdClass = "";
+						let tdId = "";
+						let notifications = null;
+						let clickFunction = null;
+						if(date.getHours() >= hd.startTime && date.getDay() == header[i+1].day)
+							tdClass = "bg-secondary"; //finished
+						else if(obj === undefined)
+							tdClass = "bg-danger"; //not exists
+						else if(obj.open == 0)
+							tdClass = "bg-danger"; //closed
+						else if(reservationsToConfirm.length > 0){
+							tdClass = "bg-warning can-reserve";
+							notifications = reservationsToConfirm.length;
+							tdId = "wd:"+getWeekDay(header[i+1].day)+"-st:"+hd.startTime+"-id:"+obj.id;
+							clickFunction = showConfirmReservations;
+						}
+						else if(todayReservations.length > 0)
+							tdClass = "bg-success";
+						//Add the reserved color and notifications.
+						tBodyRow.appendChild(addScheduleTd(tdClass, tdId, notifications, clickFunction));
+					}
+				tBody.appendChild(tBodyRow);
+			});
+		scheduleTable.appendChild(tBody);
+	})
 }
 
 const setEditScheduleTable = function(schedules){
@@ -153,6 +170,102 @@ const setEditScheduleTable = function(schedules){
 		gId(idName + '-startTime').value = sh.start_time;
 		gId(idName + '-endTime').value = sh.end_time;
 	});
+}
+
+const showConfirmReservations = async function(e){
+	let info = e.target.id;
+	let modalBody = gId("confirmReservationsBody");
+	clearConfirmReservations();
+	$('#confirmReservations').modal('show');
+
+	let subinfo = info.split('-');
+	let weekDay = subinfo[0].split(':')[1];
+	let startTime = parseInt(subinfo[1].split(':')[1]);
+	let id_schedule = parseInt(subinfo[2].split(':')[1]);
+	await axios.post('/getScheduleReservations', {weekDay, startTime, id_schedule})
+	.then((res) => {
+
+		let reservations = res.data;
+		reservations.forEach(async (reservation) => {
+			let formGroup = document.createElement('div');
+				formGroup.className += "form-group";
+				formGroup.id = "formGroup-"+reservation.id_reservation;
+				let userGroup = document.createElement('div');
+					userGroup.className += "input-group";
+					let userGroupPrepend = document.createElement('div');
+						userGroupPrepend.className += "input-group-prepend";
+						let userGroupPrependLabel = document.createElement('label');
+							userGroupPrependLabel.className += "input-group-text";
+							userGroupPrependLabel.appendChild(document.createTextNode("Usuário: "));
+						userGroupPrepend.appendChild(userGroupPrependLabel)
+					userGroup.appendChild(userGroupPrepend);
+
+					let userGroupInput = document.createElement('input');
+						userGroupInput.type = "text";
+						userGroupInput.className += "form-control cursor-context";
+						userGroupInput.value = reservation.name;
+						userGroupInput.readOnly = true;
+					userGroup.appendChild(userGroupInput);
+				formGroup.appendChild(userGroup);
+
+				let equipments = await getReservedEquipments(reservation.id_reservation);
+				equipments.data.forEach((equip) => {
+					let inputGroup = document.createElement('div');
+						inputGroup.className += "input-group";
+						let equipInput = document.createElement('input');
+							equipInput.type = "text";
+							equipInput.className += "form-control bg-success text-white cursor-context";
+							equipInput.readOnly = true;
+							equipInput.value = `${equip.qtd}x ${equip.name}`;
+						inputGroup.appendChild(equipInput);
+					formGroup.appendChild(inputGroup);
+				})
+
+				let btnGroup = document.createElement('div');
+					btnGroup.className += 'input-group';
+					btnGroup.id = 'reservation-'+reservation.id_reservation;
+					let acceptBtn = document.createElement('button');
+						acceptBtn.className = "form-control btn btn-primary";
+						acceptBtn.appendChild(document.createTextNode('Aceitar'));
+						acceptBtn.addEventListener('click', (e) => acceptReservation(e));
+					btnGroup.appendChild(acceptBtn);
+
+					let declineBtn = document.createElement('button');
+						declineBtn.className = "form-control btn btn-danger";
+						declineBtn.appendChild(document.createTextNode('Recusar'));
+						declineBtn.addEventListener('click', (e) => declineReservation(e));
+					btnGroup.appendChild(declineBtn);
+
+				formGroup.appendChild(btnGroup);
+			modalBody.appendChild(formGroup);
+		});
+	})
+}
+
+const getReservedEquipments = async function(id_reservation){
+	return axios.post('/equipmentsForReservation', {id: id_reservation})
+}
+
+const acceptReservation = async function(event){
+	let id_reservation = event.target.parentElement.id.split('-')[1];
+	await axios.post('/acceptReservation', {id_reservation})
+	.then((res) => {
+		postReservation(id_reservation)
+	})
+}
+
+const declineReservation = async function(event){
+	let id_reservation = event.target.parentElement.id.split('-')[1];
+	await axios.post('/declineReservation', {id_reservation})
+	.then((res) => {
+		postReservation(id_reservation)
+	})
+}
+
+const postReservation = function(id_reservation){
+	let group = gId("formGroup-"+id_reservation);
+	group.parentElement.removeChild(group);
+	refreshSchedules();
 }
 
 /********************
@@ -360,6 +473,12 @@ const clearNewEquipmentForm = function(){
 	gId("newEquipmentQtd").value = 0;
 }
 
+const clearConfirmReservations = function(){
+	let body = gId("confirmReservationsBody");
+	while(body.firstChild)
+		body.removeChild(body.firstChild)
+}
+
 const addTh = function(text, scope){
 	let th = document.createElement('th');
 	th.scope = scope;
@@ -413,14 +532,20 @@ const addPermTd = function(tdClass, row){
 	return td;
 }
 
-const addScheduleTd = function(tdClass, badge){
+const addScheduleTd = function(tdClass, tdId, badge, clickFunction){
 	let td = document.createElement('td');
 	td.className += tdClass;
+	td.id = tdId;
 	if(badge){
 		let span = document.createElement('span');
 		span.className += "badge badge-light";
 		span.appendChild(document.createTextNode(badge));
 		td.appendChild(span);
+	}
+	if(typeof clickFunction === 'function'){
+		td.addEventListener('click', (e) => {
+			clickFunction(e);
+		});
 	}
 
 	return td;

@@ -430,6 +430,45 @@
 					  	</div>
 					</div>
 
+					<!-- CONFIRM RESERVATIONS MODAL -->
+					<div class="modal fade" id="confirmReservations" tabindex="-1" role="dialog" aria-labelledby="confirmReservations" aria-hidden="true">
+						<div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+					    	<div class="modal-content">
+					      		<div class="modal-header">
+					        		<h5 class="modal-title">Verificar Reservas</h5>
+					        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					          			<span aria-hidden="true">&times;</span>
+					        		</button>
+					      		</div>
+					      		<div class="modal-body">
+					        		<div class="container-fluid" id="confirmReservationsBody">
+				        				<div class="form-group">
+				        					<div class="input-group">
+					        					<div class="input-group-prepend">
+					        						<label class="input-group-text">Usuário: </label>
+					        					</div>
+												<input type="text" class="form-control cursor-context" id="" aria-label="userName" value="maluco no pedaço" readonly>
+					        				</div>
+					        				<div class="input-group">
+												<input type="text" class="form-control bg-success text-white cursor-context" id="" aria-label="equipment" value="5x Arduinos" readonly>
+					        				</div>
+					        				<div class="input-group">
+												<input type="text" class="form-control bg-success text-white cursor-context" id="" aria-label="equipment" value="1x PIC" readonly>
+					        				</div>
+					        				<div class="input-group">
+												<button class="form-control btn btn-primary" id="confirmReservation">Aceitar</button>
+												<button class="form-control btn btn-danger" id="confirmReservation">Recusar</button>
+					        				</div>				
+				        				</div>
+					        		</div>
+					      		</div>
+					      		<div class="modal-footer">
+					        		<button type="button" class="btn btn-secondary" data-dismiss="modal">Finalizar</button>
+					      		</div>
+					    	</div>
+					  	</div>
+					</div>
+
 					<!-- SCHEDULES TABLE -->
 	  				<table id="schedule-table" class="table table-sm table-bordered table-hover">
 					</table>
