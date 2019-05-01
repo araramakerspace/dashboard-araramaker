@@ -100,7 +100,7 @@ const alterNavbar = function(user, userId, permission){
 	let userName = document.createTextNode(user);
 
 	loginDropdown.children[0].appendChild(userName);
-	addLogoutDropdown(loginDropdown);
+	addLogoutDropdown(userId);
 
 	if(permission == 1){
 		//adds a new Admin tab for easy access
@@ -111,9 +111,23 @@ const alterNavbar = function(user, userId, permission){
 
 }
 
-const addLogoutDropdown = function(loginDropdown){
+const addLogoutDropdown = function(userId){
 	let newDropdown = document.createElement('ul');
 	newDropdown.className += 'dropdown-menu';
+		let deleteAccoutLi = document.createElement('li');
+		deleteAccoutLi.className += 'input-group';
+
+			let deleteAcountLink = document.createElement('a');
+			deleteAcountLink.href = "#";
+			deleteAcountLink.className += "details";
+			deleteAcountLink.addEventListener('click', () => deleteUser(userId));
+			deleteAcountLink.appendChild(document.createTextNode("Excluir conta"));
+
+			deleteAccoutLi.appendChild(deleteAcountLink);
+		newDropdown.appendChild(deleteAccoutLi);
+
+		let newHr = document.createElement('hr');
+		newDropdown.appendChild(newHr);
 
 		let newLi = document.createElement('li');
 		newLi.className += 'input-group';
@@ -167,5 +181,21 @@ const getWeekDay = function(i){
 		default:
 			return 'saturday';
 			break;
+	}
+}
+
+const deleteUser = async function(id){
+	let res = confirm("Deseja mesmo excluir sua conta?")
+	if(res){
+		await axios.post('/deleteUser', {id: id})
+		.then((result) => {
+			if(result.data){
+				if(result.data.success){
+					window.location.replace("/logout");
+				}
+				else
+					alert("Erro! " + result.data.error);
+			}
+		})
 	}
 }

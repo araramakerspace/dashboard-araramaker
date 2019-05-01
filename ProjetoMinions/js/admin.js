@@ -131,6 +131,7 @@ const fillScheduleTable = async function(content, header, columnHeader){
 						let tdId = "";
 						let notifications = null;
 						let clickFunction = null;
+
 						if(date.getHours() >= hd.startTime && date.getDay() == header[i+1].day)
 							tdClass = "bg-secondary"; //finished
 						else if(obj === undefined)
@@ -184,7 +185,6 @@ const showConfirmReservations = async function(e){
 	let id_schedule = parseInt(subinfo[2].split(':')[1]);
 	await axios.post('/getScheduleReservations', {weekDay, startTime, id_schedule})
 	.then((res) => {
-
 		let reservations = res.data;
 		reservations.forEach(async (reservation) => {
 			let formGroup = document.createElement('div');

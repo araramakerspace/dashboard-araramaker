@@ -252,6 +252,21 @@ router.post('/acceptReservation', (req, res) => {
 
 // DATA DELETE
 
+router.post('/deleteUser',(req, res) => {
+	if(req.session.user){
+		if(req.session.idUser == req.body.id){
+			sql.deleteUser(req.body.id)
+			.then((result) => {
+				res.send(JSON.stringify({success: result.success, error: result.error}));
+			})
+		}
+		else
+			res.status(401).send("Unauthorized acess");
+	}
+	else
+		res.status(403).send("Access denied");
+})
+
 router.post('/deleteEquipment', (req, res) => {
 	if(req.session.user){
 		if(req.session.user.permission == 1){

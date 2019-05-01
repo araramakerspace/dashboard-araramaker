@@ -86,10 +86,10 @@ db.getReservedEquipments = async function(){
 	await this.all("SELECT se.id_equipment, e.name, se.qtd FROM Schedule_Equipments se, Equipments e WHERE se.id_equipment = e.id_equipment AND se.id_schedule = 2")
 	.then((result) => {
 		res = result;
-		return this.all("SELECT se.id_equipment, e.name, SUM(re.qtd) as totalQtd FROM Schedule_Equipments se, Reservation r, Reservation_Equipment re, Equipments e WHERE r.id_reservation = re.id_reservation AND se.id_schedule = r.id_schedule AND se.id_equipment = re.id_equipment AND se.id_equipment = e.id_equipment")
+		return this.all("SELECT re.id_equipment, SUM(re.qtd) as totalQtd FROM Reservation r, Reservation_Equipment re WHERE r.id_reservation = re.id_reservation GROUP BY re.id_equipment")
 	})
 	.then((result) => {
-		if(result[0].id_equipment && result[0].name && result[0].totalQtd){
+		if(result[0].id_equipment && result[0].totalQtd){
 			result.forEach((equip) => {
 				let element = res.find((el) => {
 					return el.id_equipment == equip.id_equipment;
@@ -112,7 +112,7 @@ db.getReservedEquipments = async function(){
 
 db.getReservations = async function(){
 	let res, error;
-	await this.all("SELECT s.id_schedule, s.start_time, s.weekDay, r.id_user, r.id_reservation, u.name, r.confirmed FROM Schedules s, Reservation r, Users u WHERE s.Open = 1 and s.id_schedule = r.id_schedule AND u.id_user=r.id_user")
+	await this.all("SELECT s.id_schedule, r.start_time, s.weekDay, r.id_user, r.id_reservation, u.name, r.confirmed FROM Schedules s, Reservation r, Users u WHERE s.Open = 1 and s.id_schedule = r.id_schedule AND u.id_user=r.id_user")
 	.then((result) => {
 		res = result;
 		error = null;
@@ -127,6 +127,7 @@ db.getReservations = async function(){
 
 db.getScheduleReservations = async function(data){
 	let res, error;
+	console.log(data);
 	await this.all("SELECT u.name, r.id_reservation, u.id_user FROM Reservation r, Users u, Schedules s WHERE u.id_user = r.id_user AND r.id_schedule = s.id_schedule AND r.confirmed = 0 AND r.start_time = ? AND s.weekDay = ? AND s.id_schedule = ?", 
 		[
 		data.startTime,
@@ -135,6 +136,7 @@ db.getScheduleReservations = async function(data){
 		]
 	)
 	.then((result) => {
+		console.log(result);
 		res = result;
 		error = null;
 	})
@@ -389,6 +391,23 @@ db.deleteReservation = async function(data){
 	})
 
 	return res;
+}
+
+db.deleteUser = async function(id){
+	let success, error;
+	if (id == 1)
+		return {success: null, error: "You can't delete the root admin"}
+	await this.run("DELETE FROM Users WHERE id_user = ?", [id])
+	.then(() => {
+		success = true;
+		error = null;
+	})
+	.catch((err) => {
+		success = null;
+		error = err;
+	})
+
+	return {success, error}
 }
 
 module.exports = db;
