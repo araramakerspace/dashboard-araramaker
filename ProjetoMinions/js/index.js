@@ -189,13 +189,174 @@ const getDateInStandard = function(date, dayOffset){
 
 *************************/
 
-const makeReservation = function(id){
-	let h = id.split('-');
-	let hour = h[1];
-	let day = h[2];
-	let month = h[3];
-	let weekDay = h[4];
-	console.log(`Attemping to make a reservation at ${hour} hours, in ${day}/${month}`);
+const makeReservation = async function(id){
+	let user;
+	await axios.get('/session')
+	.then((res) => {
+		if(res.data.error)
+			throw new Error('Please login');
+		else
+			user = res.data;
+		return axios.get('/reservedEquipments')
+	})
+	.then((res) => {
+		let h = id.split('-');
+		let hour = h[1];
+		let day = h[2];
+		let month = h[3];
+		let weekDay = h[4];
+		let reservationForm = gId('reservation-panel');
+		clearReservationPanel();
+
+		let reserveDetails = document.createElement('div');
+			reserveDetails.className += "form-row";
+				let reserveDetailsP = document.createElement('p');
+				reserveDetailsP.appendChild(document.createTextNode(`Reserva dia ${day}/${month}, das ${hour} as ${parseInt(hour)+1} horas`));
+			reserveDetails.appendChild(reserveDetailsP);
+		reservationForm.appendChild(reserveDetails);
+
+		let selectRow = document.createElement('div');
+			selectRow.className += "form-group form-row";
+
+				let selectLabel = document.createElement('label');
+				selectLabel.for = 'selectEquipments';
+				selectLabel.appendChild(document.createTextNode('Deseja reservar algum equipamento?'));
+			selectRow.appendChild(selectLabel);
+
+				let selectInput = document.createElement('select');
+				selectInput.className += "form-control";
+				selectInput.id = "selectEquipments";
+				selectInput.name = "selectEquipments";
+					let defaultOption = document.createElement('option');
+					defaultOption.value = -1;
+					defaultOption.appendChild(document.createTextNode('Selecione'));
+				selectInput.appendChild(defaultOption);
+
+				res.data.forEach((equipment) => {
+					let newOption = document.createElement('option');
+					newOption.value = equipment.id_equipment;
+					newOption.appendChild(document.createTextNode(equipment.name));
+					newOption.id = `max-${equipment.qtd}`;
+					selectInput.appendChild(newOption);
+				});
+
+			selectRow.appendChild(selectInput);
+		reservationForm.appendChild(selectRow);
+
+		let hiddenGroup = document.createElement('div');
+		hiddenGroup.id = "equipGroupInputs";
+		hiddenGroup.className += "form-group";
+
+		reservationForm.appendChild(hiddenGroup);
+
+		let confirmDiv = document.createElement('div');
+		confirmDiv.className += "d-flex flex-row justify-content-center";
+			let confirmBtn = document.createElement('button');
+			confirmBtn.className += "btn btn-primary m-a";
+			confirmBtn.appendChild(document.createTextNode("Reservar"));
+
+			confirmDiv.appendChild(confirmBtn);
+		reservationForm.appendChild(confirmDiv);
+
+		selectInput.addEventListener('change', (e) => addEquipmentInPanel(e, hiddenGroup));
+		confirmBtn.addEventListener('click', (e) => confirmReservation(e, user, {hour, day, month, weekDay}));
+	});
+}
+
+const loadReservationPanel = function(user, schedule){
+	let title = gId("reservation-title");
+	let form = gId("reservation-panel");
+
+	if(user){
+		while(title.firstChild)
+			title.removeChild(title.firstChild);
+		title.appendChild(document.createTextNode(`Bem-vindo(a) ${user.name}! Faça suas reservas clicando no horário desejado na tabela.`));
+
+	}
+}
+
+const addEquipmentInPanel = function(e, hiddenGroup){
+	let select = e.target;
+	let selected = select.options[select.selectedIndex];
+	
+	if(selected.value != -1){
+		let name = "equip-"+selected.value;
+		let equipmentsInPanel = document.getElementsByClassName("reservation-equipment-input");
+		if(equipmentsInPanel.length > 0){
+			for(let i = 0; i < equipmentsInPanel.length; i++) {
+				if(equipmentsInPanel[i].name == name)
+					return;
+			}
+		}
+
+		let newFormRow = document.createElement('div');
+		newFormRow.className += "form-row input-group";
+			let newPrepend = document.createElement('div');
+			newPrepend.className += "input-group-prepend";
+				let newLabel = document.createElement('label');
+				newLabel.for = name;
+				newLabel.className += "input-group-text";
+				newLabel.appendChild(document.createTextNode(selected.text));
+				newPrepend.appendChild(newLabel);
+			newFormRow.appendChild(newPrepend);
+
+			let newInput = document.createElement('input');
+			newInput.type = "number";
+			newInput.name = name;
+			newInput.id = name;
+			newInput.className += "form-control reservation-equipment-input";
+			newInput.min = 0;
+			newInput.max = parseInt(selected.id.split('-')[1]);
+			newInput.value = 0;
+			newFormRow.appendChild(newInput);
+
+			let deleteLinkDiv = document.createElement('div');
+			deleteLinkDiv.className += "input-group-prepend";
+				let newLink = document.createElement('a');
+				newLink.href = "#";
+				newLink.className += "text-danger input-group-text";
+				newLink.innerHTML = '&times;';
+				newLink.addEventListener('click', () => deleteReservatonEquipmentInput(hiddenGroup, newFormRow));
+				deleteLinkDiv.appendChild(newLink);
+			newFormRow.appendChild(deleteLinkDiv);
+		hiddenGroup.appendChild(newFormRow);
+	}
+}
+
+const confirmReservation = async function(e, user, schedule){
+	e.preventDefault();
+	let equipments = [];
+	let reservation = {id_user: user.id_user, weekDay: getWeekDay(schedule.weekDay), startTime: schedule.hour, date: getSQLDate(schedule.day, schedule.month)};
+
+	let equipmentsInPanel = document.getElementsByClassName("reservation-equipment-input");
+	for(let i = 0; i < equipmentsInPanel.length; i++){
+		if(parseInt(equipmentsInPanel[i].value) > 0)
+			equipments.push({id_equipment: parseInt(equipmentsInPanel[i].id.split('-')[1]), qtd: parseInt(equipmentsInPanel[i].value)});
+	}
+
+	await axios.post('/confirmReservation',{reservation, equipments})
+	.then((res) => {
+		clearReservationPanel();
+		gId("reservation-panel").appendChild(document.createTextNode("Reserva efetuada! Aguarde a confirmação de um administrador."));
+	})
+	.catch(()=>{
+		clearReservationPanel();
+		gId("reservation-panel").appendChild(document.createTextNode("Houve um erro ao efetuar a reserva. Tente novamente mais tarde."));
+	})
+}
+
+const clearReservationPanel = function(){
+	let reservationForm = gId('reservation-panel');
+	while(reservationForm.firstChild)
+		reservationForm.removeChild(reservationForm.firstChild)
+}
+
+const deleteReservatonEquipmentInput = function(parent, row){
+	parent.removeChild(row);
+}
+
+const getSQLDate = function(day, month){
+	return "2000-"+month+"-"+day;
 }
 
 /******************

@@ -159,3 +159,7 @@ footer .section-title {
 .can-reserve{
 	cursor: pointer;
 }
+
+.cursor-context{
+	cursor: context-menu;
+}

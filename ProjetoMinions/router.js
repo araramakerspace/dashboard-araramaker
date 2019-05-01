@@ -78,6 +78,46 @@ router.get('/equipments', (req, res) => {
 	});
 })
 
+router.get('/reservedEquipments',(req, res) => {
+	sql.getReservedEquipments()
+	.then((data) => {
+		if(data.error)
+			res.status(500).send("Couldn't get database information.")
+		else
+			res.send(JSON.stringify(data.res))
+	})
+});
+
+router.post('/getReservations', (req, res) => {
+	sql.getReservations()
+	.then((data) => {
+		if(data.res)
+			res.send(JSON.stringify(data.res));
+		else
+			res.status(500).send(JSON.stringify(data.error))
+	})
+});
+
+router.post('/getScheduleReservations', (req, res) => {
+	sql.getScheduleReservations(req.body)
+	.then((data) => {
+		if(data.res)
+			res.send(JSON.stringify(data.res));
+		else
+			res.status(500).send(JSON.stringify(data.error))
+	})
+});
+
+router.post('/equipmentsForReservation', (req, res) => {
+	sql.getEquipmentsForReservation(req.body)
+	.then((data) => {
+		if(data.res)
+			res.send(JSON.stringify(data.res));
+		else
+			res.status(500).send(JSON.stringify(null))
+	})
+});
+
 // DATA POSTS
 
 router.post('/signin', function(req,res){
@@ -96,7 +136,7 @@ router.post('/addEquipment', function(req,res){
 	});
 });
 
-router.post('/makeReservation', function(req,res){
+router.post('/confirmReservation', function(req,res){
 	sql.makeReservation(req.body)
 	.then((result) => {
 		if(result)
@@ -189,6 +229,24 @@ router.post('/giveAdmin',(req, res) => {
 		res.status(403).send("Access denied");
 });
 
+router.post('/acceptReservation', (req, res) => {
+	if(req.session.user){
+		if(req.session.user.permission == 1){
+			sql.acceptReservation(req.body)
+			.then((data) => {
+				if(data)
+					res.send("Atualizado!");
+				else
+					res.status(500).send("Error updating reservation.");
+			})
+		}
+		else
+			res.status(401).send("Unauthorized acess");
+	}
+	else
+		res.status(403).send("Access denied");
+})
+
 // DATA DELETE
 
 router.post('/deleteEquipment', (req, res) => {
@@ -199,7 +257,7 @@ router.post('/deleteEquipment', (req, res) => {
 				if(result)
 					res.send("Deletado!");
 				else
-					res.status(500).send("Error updating schedules.");
+					res.status(500).send("Error deleting equipment.");
 			})
 		}
 		else
@@ -208,6 +266,24 @@ router.post('/deleteEquipment', (req, res) => {
 	else
 		res.status(403).send("Access denied");
 });
+
+router.post('/declineReservation', (req, res) => {
+	if(req.session.user){
+		if(req.session.user.permission == 1){
+			sql.deleteReservation(req.body)
+			.then((data) => {
+				if(data)
+					res.send("Deletado!");
+				else
+					res.status(500).send("Error deleting reservation.");
+			})
+		}
+		else
+			res.status(401).send("Unauthorized acess");
+	}
+	else
+		res.status(403).send("Access denied");
+})
 
 // SERVICES
 

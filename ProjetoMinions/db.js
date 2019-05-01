@@ -80,6 +80,88 @@ db.getEquipments = async function(){
 	return {equipments, error};
 }
 
+db.getReservedEquipments = async function(){
+	let res, error;
+
+	await this.all("SELECT se.id_equipment, e.name, se.qtd FROM Schedule_Equipments se, Equipments e WHERE se.id_equipment = e.id_equipment AND se.id_schedule = 2")
+	.then((result) => {
+		res = result;
+		return this.all("SELECT se.id_equipment, e.name, SUM(re.qtd) as totalQtd FROM Schedule_Equipments se, Reservation r, Reservation_Equipment re, Equipments e WHERE r.id_reservation = re.id_reservation AND se.id_schedule = r.id_schedule AND se.id_equipment = re.id_equipment AND se.id_equipment = e.id_equipment")
+	})
+	.then((result) => {
+		if(result[0].id_equipment && result[0].name && result[0].totalQtd){
+			result.forEach((equip) => {
+				let element = res.find((el) => {
+					return el.id_equipment == equip.id_equipment;
+				})
+				if(element.qtd <= equip.totalQtd)
+					res.splice(res.indexOf(element), 1)
+				else
+					res[res.indexOf(element)].qtd -= equip.totalQtd;
+			})
+		}
+		error = null;
+	})
+	.catch((err) => {
+		res = null;
+		error = true;
+	})
+
+	return {res, error};
+}
+
+db.getReservations = async function(){
+	let res, error;
+	await this.all("SELECT s.id_schedule, s.start_time, s.weekDay, r.id_user, r.id_reservation, u.name, r.confirmed FROM Schedules s, Reservation r, Users u WHERE s.Open = 1 and s.id_schedule = r.id_schedule AND u.id_user=r.id_user")
+	.then((result) => {
+		res = result;
+		error = null;
+	})
+	.catch((err) => {
+		res = null;
+		error = err;
+	})
+
+	return {res, error}
+}
+
+db.getScheduleReservations = async function(data){
+	let res, error;
+	await this.all("SELECT u.name, r.id_reservation, u.id_user FROM Reservation r, Users u, Schedules s WHERE u.id_user = r.id_user AND r.id_schedule = s.id_schedule AND r.confirmed = 0 AND r.start_time = ? AND s.weekDay = ? AND s.id_schedule = ?", 
+		[
+		data.startTime,
+		data.weekDay,
+		data.id_schedule
+		]
+	)
+	.then((result) => {
+		res = result;
+		error = null;
+	})
+	.catch((err) => {
+		res = null;
+		error = err;
+	})
+
+	return {res, error}
+}
+
+db.getEquipmentsForReservation = async function(data){
+	let res, error;
+
+	await this.all("SELECT e.name, re.qtd FROM Reservation_Equipment re, Equipments e WHERE e.id_equipment = re.id_equipment AND re.id_reservation = ?", [data.id])
+	.then((result) => {
+		res = result;
+		error = null;
+	})
+	.catch((err) => {
+		res = null;
+		error = err;
+	})
+
+	return {res, error}
+}
+
 //VALIDATE
 
 db.validateSignin = async function(user, cpf){
@@ -146,12 +228,24 @@ db.signIn = async function(user){
 
 db.addEquipment = async function(equipment){
 	let res;
+	let id;
 	await this.run("INSERT INTO Equipments(name, description, qtd) VALUES(?, ?, ?)", [
 		equipment.name.toLowerCase(),
 		equipment.description,
 		equipment.qtd
 		]
 	)
+	.then((id) => {
+		return {schedules: this.all("SELECT * FROM Schedules"), id: id};
+	})
+	.then(async (data, id) => {
+		let query = "INSERT INTO Schedule_Equipments(id_schedule, id_equipment, qtd) VALUES";
+		let schedules = await data.schedules;
+		schedules.forEach((sh, i) => {
+			query += `(${sh.id_schedule}, ${data.id.id}, ${equipment.qtd})${(i == (schedules.length - 1)) ? '' : ','}`;
+		});
+		return this.run(query)
+	})
 	.then(() => {
 		res = true;
 	})
@@ -162,30 +256,36 @@ db.addEquipment = async function(equipment){
 	return res;
 }
 
-db.makeReservation = async function(reservation){
+db.makeReservation = async function(data){
+	let reservation = data.reservation;
+	let equipments = data.equipments;
 	let res;
-	await this.run("INSERT INTO Reservation(id_user, id_schedule, start_time, confirmed, date) VALUES(?, ?, ?, ?, ?)", [
+	await this.run("INSERT INTO Reservation(id_user, id_schedule, start_time, confirmed, date) VALUES(?, (SELECT id_schedule FROM Schedules WHERE start_time <= ? AND end_time >= ? AND weekDay = ? AND Open = 1), ?, ?, ?)", [
 		reservation.id_user,
-		reservation.id_schedule,
-		reservation.start_time,
-		reservation.confirmed,
+		reservation.startTime,
+		reservation.startTime,
+		reservation.weekDay,
+		reservation.startTime,
+		0,
 		reservation.date
 		]
 	)
 	.then((id) => {
-		let query = "INSERT INTO Reservation_Equipment(id_reservation, id_equipment, qtd) VALUES ";
-		reservation.equipment.forEach((equip, i) => {
-			query += `(${equip.id_reservation}, ${id_equipment}, ${qtd})${(i == (reservation.equipment.length - 1))}`;
-		});
-		this.run(query)
-		.then(() => {
-			res = true;
-		})
-		.catch((err) => {
-			res = false;
-		});
+		if(equipments.length > 0){
+			let query = "INSERT INTO Reservation_Equipment(id_reservation, id_equipment, qtd) VALUES ";
+			equipments.forEach((equip, i) => {
+				query += `(${id.id}, ${equip.id_equipment}, ${equip.qtd})${(i == (equipments.length - 1)) ? '' : ','}`;
+			});
+			return this.run(query)
+		}
+		else
+			return
+	})
+	.then(() => {
+		res = true;
 	})
 	.catch((err) => {
+		console.log(err);
 		res = false;
 	});
 
@@ -236,13 +336,27 @@ db.updateEquipment = async function(equipment){
 db.alterUserPermission = async function(user){
 	let res;
 	
-	await this.run("UPDATE Users SET permission = 1")
+	await this.run("UPDATE Users SET permission = 1 WHERE id_user = ?", [user.id_user])
 	.then(() => {
 		res = true;
 	})
 	.catch((err) => {
 		res = false;
 	});
+
+	return res;
+}
+
+db.acceptReservation = async function(data){
+	let res;
+
+	await this.run("UPDATE Reservation SET confirmed = 1 WHERE id_reservation = ?", [data.id_reservation])
+	.then(()=>{
+		res = true;
+	})
+	.catch(() => {
+		res = false;
+	})
 
 	return res;
 }
@@ -259,6 +373,20 @@ db.deleteEquipment = async function(idEquip){
 	.catch((err) => {
 		res = false;
 	});
+
+	return res;
+}
+
+db.deleteReservation = async function(data){
+	let res;
+
+	await this.run("DELETE from Reservation WHERE id_reservation = ?", [data.id_reservation])
+	.then(() => {
+		res = true;
+	})
+	.catch(() => {
+		res = false;
+	})
 
 	return res;
 }

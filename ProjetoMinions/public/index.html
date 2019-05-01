@@ -64,12 +64,20 @@
 
 	<main class="container container-fluid">
 		<div class="d-flex flex-row col-md-12">
-			<p>Legenda: <span class="text-white bg-warning legenda">Notificações</span> <span class="text-white bg-success legenda">Com reservas</span> <span class="text-white bg-danger legenda">Indisponível</span> <span class="text-white bg-secondary legenda">Terminado</span></p>
+			<p>Legenda: <span class="legenda border border-dark mr-1">Disponível</span><span class="text-white bg-danger legenda">Indisponível</span> <span class="text-white bg-secondary legenda">Terminado</span></p>
   		</div>
   		<div class="row">
 			<div class="col-md-5">
 				<table id="schedule-table" class="table table-sm table-bordered table-hover">
 				</table>
+			</div>
+
+			<div class="col-md-3"></div>
+
+			<div class="col-md-4">
+				<h3 id="reservation-title"><span>Faça login para poder reservar salas.</span></h3>
+				<form id="reservation-panel" action="#">
+				</form>
 			</div>
   		</div>
 	</main>
