@@ -23,6 +23,9 @@ router.get('/',function(req,res){
 router.get('/cadastro',function(req,res){
 	res.sendFile(path.join(__dirname+'/public/cadastro.html'));
 });
+router.get('/about',function(req,res){
+	res.sendFile(path.join(__dirname+'/public/sobre.html'));
+});
 router.get('/admin',function(req,res){
 	if(req.session.user){
 		if(req.session.user.permission == 1)
