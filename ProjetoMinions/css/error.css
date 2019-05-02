@@ -1,0 +1,18 @@
+﻿div h1{
+	text-align: center;
+}
+div h2{
+	font-size: 18px;
+	padding: 0px 0px 15px 0px;
+	text-align: center;
+}
+
+p{
+	text-align: center;
+}
+.logoararamakerspace{
+	height: 100%;
+	width: 30%;
+	border-radius: 50%;
+	padding: 0px 0px 0px 0px;
+}

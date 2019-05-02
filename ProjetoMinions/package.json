@@ -1,0 +1,21 @@
+{
+  "name": "dashboardararamaker",
+  "version": "1.0.0",
+  "description": "Um Dashboard feito para o grupo AraramakerSpace, feito para o controle de alocacoes de salas e equipamentos",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "EJEC Minions",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "bluebird": "^3.5.4",
+    "body-parser": "^1.18.3",
+    "cookie-parser": "^1.4.4",
+    "express": "^4.16.4",
+    "express-session": "^1.16.1",
+    "jshint": "^2.10.2",
+    "sqlite3": "^4.0.6"
+  }
+}

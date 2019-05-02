@@ -1,0 +1,165 @@
+/* NAVBAR */
+
+#navbar-logo{
+	width: 70px;
+}
+
+.navbar{
+	background-color: #2973de !important;
+}
+
+#navUl .nav-link{
+	color: white !important;
+}
+
+#navUl .nav-link:hover{
+	color: #4bdeff !important;
+}
+
+.details{
+	font-size: 13px;
+	width: 100%;
+	text-align: center;
+}
+
+#loginDropdown{
+	width: 250px !important;
+	border-radius: 10px;
+	background-color: #bdd4f5;
+}
+
+#loginDropdown:hover{
+	background-color: #e9f1fc;
+}
+
+#loginDropdown a{
+	color: #1c5ab0 !important;
+}
+
+#loginDropdown ul{
+	width: 100% !important;
+	padding: 5px;
+}
+
+#loginDropdown ul li{
+	margin-bottom: 2px;
+}
+
+#loginDropdown ul li button{
+	width: 100% !important;
+	background-color: #07162c;
+	color: white;
+}
+
+#loginDropdown ul li button:hover{
+	background-color: #11386e;
+}
+
+/* GERAL */
+.title{
+	text-align: center;
+	color: #0a2242;
+}
+
+main{
+	min-height: 500px;
+}
+
+
+/* Footer */
+footer {
+    padding: 30px 0;
+}
+
+footer .section-title {
+    text-align: center;
+    color: #2973de;
+    margin-bottom: 50px;
+    text-transform: uppercase;
+}
+#footer {
+    background: #2973de !important;
+    width: 100%;
+  
+}
+#footer h5{
+	padding-left: 20px;
+    border-left: 2px solid #eeeeee;
+    padding-bottom: 6px;
+    margin-bottom: 0px;
+    color:#ffffff;
+}
+#footer a {
+    color: #ffffff;
+    text-decoration: none !important;
+    background-color: transparent;
+    -webkit-text-decoration-skip: objects;
+}
+#footer ul.social li{
+	padding: 3px 0;
+}
+#footer ul.social li a i {
+    margin-right: 5px;
+	font-size:25px;
+	-webkit-transition: .5s all ease;
+	-moz-transition: .5s all ease;
+	transition: .5s all ease;
+}
+#footer ul.social li a i {
+	font-size:30px;
+	margin-top:-10px;
+
+}
+#footer ul.social li a,
+#footer ul.quick-links li a{
+	color:#ffffff;
+}
+#footer ul.social li {
+	color:#eeeeee;
+}
+#footer ul.quick-links li{
+	padding: 3px 0;
+	-webkit-transition: .2s all ease;
+	-moz-transition: .2s all ease;
+	transition: .2s all ease;
+}
+#footer ul.quick-links li:hover {
+	padding: 3px 0;
+	margin-left:5px;
+	font-weight:700;
+}
+.cor2{
+	color:#eeeeee;
+	font-style:normal; 
+}
+
+
+#footer ul.quick-links li a i{
+	margin-right: 15px;
+}
+#footer ul.quick-links li a i {
+    font-weight: 700;
+}
+
+@media (max-width:770px){
+	#footer h5 {
+    padding-left: 0;
+    border-left: transparent;
+    padding-bottom: 0px;
+    margin-bottom: 10px;
+}
+}
+
+/**********************
+
+	reservatons
+
+**********************/
+
+.can-reserve{
+	cursor: pointer;
+}
+
+.cursor-context{
+	cursor: context-menu;
+}
