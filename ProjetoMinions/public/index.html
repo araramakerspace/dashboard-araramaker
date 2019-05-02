@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+	<title>ARARA Makerspace</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/css/mainStyle.css">
+	<link rel="icon" type="image/x-icon" href="/img/favicon1.ico">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+</head>
+<body>
+
+	<nav class="navbar navbar-expand-sm bg-light navbar-dark">
+	  	<a class="navbar-brand" href="#"><img id="navbar-logo" src="/img/logo.png" alt="ARARA Makerspace"></a>
+	  	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+	    	<span class="navbar-toggler-icon"></span>
+	  	</button>
+	  	<div class="collapse navbar-collapse justify-content-between" id="collapsibleNavbar">
+	    	<ul class="navbar-nav" id="navUl">
+		     	<li class="nav-item">
+		        	<a class="nav-link" href="/">Início</a>
+		      	</li>
+		      	<li class="nav-item">
+		        	<a class="nav-link" href="/about">Sobre</a>
+		      	</li>
+	    	</ul>
+	      	<ul class="navbar-nav navbar-right">
+	      		<li class="dropdown nav-item" id="loginDropdown">
+	      			<a class="nav-link" data-toggle="dropdown" href="#">Entrar</a>
+	      			<form name="formLogin" id="formLogin" action="/login" method="POST" class="needs-validation">
+	      				<ul class="dropdown-menu">
+	      					<li class="input-group">
+	      						<div class="form-group">
+									<input type="text" class="form-control mr-sm-2" id="loginUser" placeholder="Usuário" aria-label="Username" required>
+									<div class="invalid-feedback">Usuário desconhecido.</div>
+	      						</div>
+							</li>
+
+							<li class="input-group">
+								<div class="form-group">
+									<input type="password" class="form-control mr-sm-2" id="loginPassword" placeholder="Senha" aria-label="Username" required>
+									<div class="invalid-feedback">Senha incorreta.</div>
+								</div>
+							</li>
+							<li>
+								<button id="loginBtn" class="btn my-2 my-sm-0" type="submit">Entrar</button>
+							</li>
+							<li class="input-group">
+								<span class="details"><a href="/redefinirSenha">Esqueci minha senha.</a></span>
+							</li>
+							<li class="dropdown-divider"></li>
+							<li class="input-group">
+								<span class="details">Não possui uma conta? <a href="/cadastro">Cadastre-se.</a></span>
+							</li>
+	      				</ul>
+	      			</form>
+	      		</li>
+	      	</ul>
+
+	      	
+	  	</div>  
+	</nav>
+
+	<main class="container container-fluid">
+		<div class="d-flex flex-row col-md-12">
+			<p>Legenda: <span class="legenda border border-dark mr-1">Disponível</span><span class="text-white bg-danger legenda">Indisponível</span> <span class="text-white bg-secondary legenda">Terminado</span></p>
+  		</div>
+  		<div class="row">
+			<div class="col-md-5">
+				<table id="schedule-table" class="table table-sm table-bordered table-hover">
+				</table>
+			</div>
+
+			<div class="col-md-3"></div>
+
+			<div class="col-md-4">
+				<h3 id="reservation-title"><span>Faça login para poder reservar salas.</span></h3>
+				<form id="reservation-panel" action="#">
+				</form>
+			</div>
+  		</div>
+	</main>
+
+<!-- Footer -->
+	<footer id="footer">
+		<div class="container">
+			<div class="row text-center text-xs-center text-sm-left text-md-left">
+				<div class="col-xs-6 col-sm-4 col-md-4">
+					<h5>Redes sociais</h5>
+					<ul class="list-unstyled quick-links">
+						<li><a href="https://www.facebook.com/araramaker/" target="_blank">
+							<i class="fa fa-angle-double-right"></i>Facebook</a></li>
+						<li><a href="https://www.instagram.com/araramaker/" target="_blank">
+							<i class="fa fa-angle-double-right"></i>Instagram</a></li>
+
+					</ul>
+				</div>
+				<div class="col-xs-6 col-sm-4 col-md-4">
+					<h5>Contato</h5>
+					<ul class="list-unstyled quick-links">
+
+						<li><p class="cor2" href="javascript:void();"> <i class="fa fa-angle-double-right"></i> Araramaker@gmail.com</p></li>
+						
+					</ul>
+				</div>
+				<div class="col-xs-6 col-sm-1 col-md-4">
+					<h5>GitHub</h5>
+					<ul class="list-unstyled quick-links">
+						<li><a href="https://araramakerspace.github.io/?fbclid=IwAR0ubwyoc7gPpdH-Aiwe8NXRS0tSWicxmnrZyk0WJfa0Je6FNyZAo81hem8" target="_blank">
+							<i class="fa fa-angle-double-right"></i>Makerspace</a></li>
+					</ul>
+				</div>
+			</div>
+			
+			<div class="row">
+			    <div class="col-xs-12 col-sm-12 col-md-12 mt-0 mt-sm-0 text-center text-white">
+					
+					<p class="h6">&copy Todos os direitos reservados.<a class="text-green ml-2" href= "https://ejec.ufsc.br/" target="_blank">EJEC</a></p>
+				</div>
+				</hr>
+			</div>	
+		</div>
+	</footer>
+	<!-- ./Footer -->
+
+
+
+
+
+
+	<script src="/js/jquery.js"></script>
+	<script src="/js/bootstrap.min.js"></script>
+	<script src="/js/axios.min.js"></script>
+	<script src="/js/main.js"></script>
+	<script src="/js/index.js"></script>
+	<script type="text/javascript">
+		
+	</script>
+</body>
+</html>
