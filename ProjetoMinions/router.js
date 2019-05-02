@@ -81,8 +81,8 @@ router.get('/equipments', (req, res) => {
 	});
 })
 
-router.get('/reservedEquipments',(req, res) => {
-	sql.getReservedEquipments()
+router.post('/reservedEquipments',(req, res) => {
+	sql.getReservedEquipments(req.body)
 	.then((data) => {
 		if(data.error)
 			res.status(500).send("Couldn't get database information.")

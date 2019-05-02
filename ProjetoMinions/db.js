@@ -80,31 +80,33 @@ db.getEquipments = async function(){
 	return {equipments, error};
 }
 
-db.getReservedEquipments = async function(){
+db.getReservedEquipments = async function(data){
 	let res, error;
 
-	await this.all("SELECT se.id_equipment, e.name, se.qtd FROM Schedule_Equipments se, Equipments e WHERE se.id_equipment = e.id_equipment AND se.id_schedule = 2")
+	await this.all("SELECT se.id_equipment, e.name, se.qtd FROM Schedule_Equipments se, Equipments e WHERE se.id_equipment = e.id_equipment AND se.id_schedule = ?", [data.id_schedule])
 	.then((result) => {
 		res = result;
 		return this.all("SELECT re.id_equipment, SUM(re.qtd) as totalQtd FROM Reservation r, Reservation_Equipment re WHERE r.id_reservation = re.id_reservation GROUP BY re.id_equipment")
 	})
 	.then((result) => {
-		if(result[0].id_equipment && result[0].totalQtd){
-			result.forEach((equip) => {
-				let element = res.find((el) => {
-					return el.id_equipment == equip.id_equipment;
+		if(result.length > 0){
+			if(result[0].id_equipment && result[0].totalQtd){
+				result.forEach((equip) => {
+					let element = res.find((el) => {
+						return el.id_equipment == equip.id_equipment;
+					})
+					if(element.qtd <= equip.totalQtd)
+						res.splice(res.indexOf(element), 1)
+					else
+						res[res.indexOf(element)].qtd -= equip.totalQtd;
 				})
-				if(element.qtd <= equip.totalQtd)
-					res.splice(res.indexOf(element), 1)
-				else
-					res[res.indexOf(element)].qtd -= equip.totalQtd;
-			})
+			}
 		}
 		error = null;
 	})
 	.catch((err) => {
 		res = null;
-		error = true;
+		error = err;
 	})
 
 	return {res, error};
