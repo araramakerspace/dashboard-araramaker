@@ -39,31 +39,31 @@ const createScheduleTable = function(schedules){
 		switch(schedule.weekDay.toLowerCase()){
 			case 'monday':
 				for(let i = schedule.start_time; i < schedule.end_time; i++)
-					weekDays[1].push({time: i, open: schedule.open});
+					weekDays[1].push({time: i, open: schedule.open, id_schedule: schedule.id_schedule});
 				break;
 			case 'tuesday':
 				for(let i = schedule.start_time; i < schedule.end_time; i++)
-					weekDays[2].push({time: i, open: schedule.open});
+					weekDays[2].push({time: i, open: schedule.open, id_schedule: schedule.id_schedule});
 				break;
 			case 'wednesday':
 				for(let i = schedule.start_time; i < schedule.end_time; i++)
-					weekDays[3].push({time: i, open: schedule.open});
+					weekDays[3].push({time: i, open: schedule.open, id_schedule: schedule.id_schedule});
 				break;
 			case 'thursday':
 				for(let i = schedule.start_time; i < schedule.end_time; i++)
-					weekDays[4].push({time: i, open: schedule.open});
+					weekDays[4].push({time: i, open: schedule.open, id_schedule: schedule.id_schedule});
 				break;
 			case 'friday':
 				for(let i = schedule.start_time; i < schedule.end_time; i++)
-					weekDays[5].push({time: i, open: schedule.open});
+					weekDays[5].push({time: i, open: schedule.open, id_schedule: schedule.id_schedule});
 				break;
 			case 'saturday':
 				for(let i = schedule.start_time; i < schedule.end_time; i++)
-					weekDays[6].push({time: i, open: schedule.open});
+					weekDays[6].push({time: i, open: schedule.open, id_schedule: schedule.id_schedule});
 				break;
 			case 'sunday':
 				for(let i = schedule.start_time; i < schedule.end_time; i++)
-					weekDays[0].push({time: i, open: schedule.open});
+					weekDays[0].push({time: i, open: schedule.open, id_schedule: schedule.id_schedule});
 				break;
 			default:
 				break;
@@ -122,7 +122,7 @@ const fillScheduleTable = function(content, header, columnHeader){
 						tdClass = "bg-danger"; //closed
 					else{
 						tdClass = "can-reserve" //can be reserved
-						tdId = `h-${hd.startTime}-${header[i+1].id}-${header[i+1].day}`;
+						tdId = `h-${hd.startTime}-${header[i+1].id}-${header[i+1].day}-${obj.id_schedule}`;
 					}
 					//Add the reserved color and notifications.
 					tBodyRow.appendChild(addTd(tdClass, notifications, tdId));
@@ -190,6 +190,12 @@ const getDateInStandard = function(date, dayOffset){
 *************************/
 
 const makeReservation = async function(id){
+	let h = id.split('-');
+	let hour = h[1];
+	let day = h[2];
+	let month = h[3];
+	let weekDay = h[4];
+	let id_schedule = h[5];
 	let user;
 	await axios.get('/session')
 	.then((res) => {
@@ -197,14 +203,9 @@ const makeReservation = async function(id){
 			throw new Error('Please login');
 		else
 			user = res.data;
-		return axios.get('/reservedEquipments')
+		return axios.post('/reservedEquipments', {id_schedule: id_schedule})
 	})
 	.then((res) => {
-		let h = id.split('-');
-		let hour = h[1];
-		let day = h[2];
-		let month = h[3];
-		let weekDay = h[4];
 		let reservationForm = gId('reservation-panel');
 		clearReservationPanel();
 
