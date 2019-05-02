@@ -80,10 +80,10 @@ db.getEquipments = async function(){
 	return {equipments, error};
 }
 
-db.getReservedEquipments = async function(){
+db.getReservedEquipments = async function(data){
 	let res, error;
 
-	await this.all("SELECT se.id_equipment, e.name, se.qtd FROM Schedule_Equipments se, Equipments e WHERE se.id_equipment = e.id_equipment AND se.id_schedule = 2")
+	await this.all("SELECT se.id_equipment, e.name, se.qtd FROM Schedule_Equipments se, Equipments e WHERE se.id_equipment = e.id_equipment AND se.id_schedule = ?", [data.id_schedule])
 	.then((result) => {
 		res = result;
 		return this.all("SELECT re.id_equipment, SUM(re.qtd) as totalQtd FROM Reservation r, Reservation_Equipment re WHERE r.id_reservation = re.id_reservation GROUP BY re.id_equipment")
@@ -106,7 +106,7 @@ db.getReservedEquipments = async function(){
 	})
 	.catch((err) => {
 		res = null;
-		error = true;
+		error = err;
 	})
 
 	return {res, error};
