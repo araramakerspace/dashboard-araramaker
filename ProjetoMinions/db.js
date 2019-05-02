@@ -89,16 +89,18 @@ db.getReservedEquipments = async function(){
 		return this.all("SELECT re.id_equipment, SUM(re.qtd) as totalQtd FROM Reservation r, Reservation_Equipment re WHERE r.id_reservation = re.id_reservation GROUP BY re.id_equipment")
 	})
 	.then((result) => {
-		if(result[0].id_equipment && result[0].totalQtd){
-			result.forEach((equip) => {
-				let element = res.find((el) => {
-					return el.id_equipment == equip.id_equipment;
+		if(result.length > 0){
+			if(result[0].id_equipment && result[0].totalQtd){
+				result.forEach((equip) => {
+					let element = res.find((el) => {
+						return el.id_equipment == equip.id_equipment;
+					})
+					if(element.qtd <= equip.totalQtd)
+						res.splice(res.indexOf(element), 1)
+					else
+						res[res.indexOf(element)].qtd -= equip.totalQtd;
 				})
-				if(element.qtd <= equip.totalQtd)
-					res.splice(res.indexOf(element), 1)
-				else
-					res[res.indexOf(element)].qtd -= equip.totalQtd;
-			})
+			}
 		}
 		error = null;
 	})
